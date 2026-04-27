@@ -2,12 +2,21 @@ class UsersController < ApplicationController
 
   def index
       @users = User.all
-      render json: @users
+      if params[:aadhar_no].present?
+        @users = User.includes(:accounts).where(aadhar_no: params[:aadhar_no]) 
+      end
+
+
+      if params[:pan_no].present?
+        @users = User.includes(:accounts).where(pan_no: params[:pan_no])
+      end
+      
+      render 'index'
   end
 
   def show
-    @user = User.find_by(params[:aadhar_no])
-    render json: @user
+    
+ 
   end
 
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_23_093859) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_27_111555) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -35,6 +35,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_23_093859) do
     t.index ["ifsc_code"], name: "index_banks_on_ifsc_code", unique: true
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "amount"
+    t.datetime "created_at", null: false
+    t.string "operation"
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["account_id"], name: "index_transactions_on_account_id"
+    t.index ["user_id"], name: "index_transactions_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "aadhar_no", null: false
     t.datetime "created_at", null: false
@@ -51,4 +62,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_23_093859) do
 
   add_foreign_key "accounts", "banks"
   add_foreign_key "accounts", "users"
+  add_foreign_key "transactions", "accounts"
+  add_foreign_key "transactions", "users"
 end

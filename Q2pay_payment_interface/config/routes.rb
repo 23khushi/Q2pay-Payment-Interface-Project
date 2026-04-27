@@ -8,5 +8,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :users
+  resources :users , param: :aadhar_no
+  # get "/users/:aadhar_no", to: "users#show"
+  # get "/users/:pan_no", to: "users#show"
+
 end

@@ -1,6 +1,8 @@
 class Account < ApplicationRecord
   belongs_to :user
   belongs_to :bank
+  has_many :transactions
+  
   require 'securerandom'
   
   before_validation :acctype_to_downcase
@@ -33,4 +35,13 @@ class Account < ApplicationRecord
     acc_no = SecureRandom.rand(10**8)
     self.acc_no = acc_no
   end
+
+   def add_money(amount)
+    transaction.create(
+    user_id: user_id
+    account_id: account_id
+    operation: 'credit'
+    amount: amount)
+  end
+
 end
