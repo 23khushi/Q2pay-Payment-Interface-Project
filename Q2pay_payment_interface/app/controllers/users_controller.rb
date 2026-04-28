@@ -2,21 +2,11 @@ class UsersController < ApplicationController
 
   def index
       @users = User.all
-      if params[:aadhar_no].present?
-        @users = User.includes(:accounts).where(aadhar_no: params[:aadhar_no]) 
-      end
-
-
-      if params[:pan_no].present?
-        @users = User.includes(:accounts).where(pan_no: params[:pan_no])
-      end
-      
       render 'index'
   end
 
   def show
     
- 
   end
 
 
@@ -43,8 +33,15 @@ class UsersController < ApplicationController
   end
 
   def update
+    @user = User.find_by(id: params[:id])
+    if @user.update(user_params)
+      render json: 'Updated successfully!'
+    else
+      render json:{errors: @user.errors.full_messages}
+    end
   end
     
+  
 
   private 
 
@@ -59,4 +56,6 @@ class UsersController < ApplicationController
   def bank_params
     params.permit(:bank_name, :ifsc_code)
   end
+
+  
 end

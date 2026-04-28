@@ -8,7 +8,7 @@ class Transaction < ApplicationRecord
 
   validates :user_id, :account_id, :operation, :amount, presence: true
   
-  validates :amount, numericality: {in: 1..99999999 }
+  validates :amount, numericality: true
   
   validates :operation , inclusion: BANK_OPERATION
   
@@ -18,5 +18,5 @@ class Transaction < ApplicationRecord
     self.operation = operation.downcase
   end
 
- 
+  
 end

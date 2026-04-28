@@ -3,7 +3,10 @@ class Bank < ApplicationRecord
 
  
   BANK_NAME = ['hdfc', 'icici']
-  IFSC_CODE_INITIALS = ['HDFC','ICIC']
+  BANK_MAPPED_IFSC = {
+    'hdfc' => 'HDFC',
+    'icici' => 'ICIC'
+  }
 
   before_validation :baank_name_downcase, :valid_ifsc_code
 
@@ -19,10 +22,10 @@ class Bank < ApplicationRecord
   end
 
    def valid_ifsc_code
-    ifsc = ifsc_code[0,4]
+    actual_ifsc = BANK_MAPPED_IFSC[bank_name]
+    ifsc_initial = ifsc_code[0,4]
     code = ifsc_code[4]
-    pp code
-    unless IFSC_CODE_INITIALS.include?(ifsc) || code == 0
+    unless actual_ifsc == ifsc_initial || code == 0
       errors.add(:ifsc_code,"is invalid for bank #{bank_name}")
     end
    end
