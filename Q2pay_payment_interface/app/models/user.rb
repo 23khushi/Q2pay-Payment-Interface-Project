@@ -1,6 +1,7 @@
 class User < ApplicationRecord
     has_many :accounts
-
+    has_many :transactions
+    
     validates :aadhar_no, presence: true, uniqueness: {message: "Already registered"}, format: { with: /\A[2-9]{1}[0-9]{11}\z/ , message: 'invalid, must be of 12 digits'}
     
     validates :pan_no, uniqueness: {message: "Already registered"}, format: {with: /\A[A-Z]{3}[PCHFTABGJLE]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}\z/, message: ' is invalid'}

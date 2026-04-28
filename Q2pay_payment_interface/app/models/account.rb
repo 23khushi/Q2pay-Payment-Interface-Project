@@ -1,6 +1,8 @@
 class Account < ApplicationRecord
   belongs_to :user
   belongs_to :bank
+  has_many :transactions
+  default_scope -> {where(deleted_at: nil)}
   require 'securerandom'
   
   before_validation :acctype_to_downcase
@@ -9,9 +11,15 @@ class Account < ApplicationRecord
   before_create :generate_account_number
   VALID_ACCOUNT_TYPE = ['saving', 'current']
   validates :acc_type, presence: true, inclusion:{in: VALID_ACCOUNT_TYPE, message: 'is invalid'}, uniqueness: {scope: [:user_id, :bank_id], message:  'with this user already exists '}
-  validates :balance, presence: true, numericality: { in: 1..99999999 }
+  validates :balance, presence: true, numericality: { in: 1..99999999}
+  # validates :amount, presence: true, numericality: { in: 1..99999999}, on: :add_money
 
 
+  def softdelete
+    update(deleted_at: Time.current)
+  end
+
+ 
 
   private
 
@@ -33,4 +41,8 @@ class Account < ApplicationRecord
     acc_no = SecureRandom.rand(10**8)
     self.acc_no = acc_no
   end
+
+
+
+
 end
