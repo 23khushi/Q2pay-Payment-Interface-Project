@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-   before_action :add_money
+  
 
   
 
@@ -36,9 +36,26 @@ class AccountsController < ApplicationController
     end
   end
 
+  def transfer_money
+    @account = Account.find_by(acc_no: params[:source_accno])
+    pp @account
+    if @account.present?
+      if @account.transfer(transfer_params)
+        render json: 'Transaction successfull'
+      else
+        render json: {errors: @account.errors.full_messages}
+      end
+    else
+      render json:"Account not present with account id #{params[:id]}"
+    end
+
+  end
 
 
+  private
 
-
+  def transfer_params
+    params.permit(:amount, :receiver_accno)
+  end
 
 end

@@ -7,19 +7,49 @@ class Account < ApplicationRecord
   
   before_validation :acctype_to_downcase
   before_validation :balance_accordingto_acctype
-  # after_validation :balance_accordingto_acctype
   before_create :generate_account_number
   VALID_ACCOUNT_TYPE = ['saving', 'current']
   validates :acc_type, presence: true, inclusion:{in: VALID_ACCOUNT_TYPE, message: 'is invalid'}, uniqueness: {scope: [:user_id, :bank_id], message:  'with this user already exists '}
   validates :balance, presence: true, numericality: { in: 1..99999999}
-  # validates :amount, presence: true, numericality: { in: 1..99999999}, on: :add_money
+
 
 
   def softdelete
     update(deleted_at: Time.current)
   end
 
- 
+
+
+  def transfer(data)
+    ActiveRecord::Base.transaction do
+      destination_account = Account.find_by(acc_no: data[:receiver_accno])
+      raise "Destination account does not exist!" unless destination_account.present?
+      
+      raise "cannot transfer to same account" if self.id == destination_account.id
+      raise "Not enough balance" if data[:amount] > self.balance
+
+      self.update!(balance: balance - data[:amount])
+      destination_account.update!(balance: destination_account[:balance] + data[:amount])
+
+      pp user_id
+      pp self.user_id 
+      Transaction.create!(
+        source_acc_id: self.id,
+        user_id: user_id,
+        receiver_acc_id: destination_account.id,
+        amount: data[:amount],
+        receiver_accno: data[:receiver_accno],
+        receiver_acc_type: destination_account.acc_type,
+        receiver_name: destination_account.user.first_name,
+        receiver_ifsc: destination_account.bank.ifsc_code, 
+        receiver_bank_name: destination_account.bank.bank_name
+      )
+    end
+    rescue => e
+    errors.add(:base, e.message)
+    false
+  end
+  
 
   private
 
@@ -41,8 +71,4 @@ class Account < ApplicationRecord
     acc_no = SecureRandom.rand(10**8)
     self.acc_no = acc_no
   end
-
-
-
-
 end

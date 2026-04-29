@@ -38,13 +38,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_061512) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.bigint "account_id", null: false
     t.bigint "amount"
     t.datetime "created_at", null: false
-    t.string "operation"
+    t.bigint "receiver_acc_id", null: false
+    t.string "receiver_acc_type"
+    t.string "receiver_accno"
+    t.string "receiver_bank_name"
+    t.string "receiver_ifsc"
+    t.string "receiver_name"
+    t.bigint "source_acc_id", null: false
     t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
-    t.index ["account_id"], name: "index_transactions_on_account_id"
+    t.index ["receiver_acc_id"], name: "index_transactions_on_receiver_acc_id"
+    t.index ["source_acc_id"], name: "index_transactions_on_source_acc_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
@@ -64,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_28_061512) do
 
   add_foreign_key "accounts", "banks"
   add_foreign_key "accounts", "users"
-  add_foreign_key "transactions", "accounts"
+  add_foreign_key "transactions", "accounts", column: "receiver_acc_id"
+  add_foreign_key "transactions", "accounts", column: "source_acc_id"
   add_foreign_key "transactions", "users"
 end

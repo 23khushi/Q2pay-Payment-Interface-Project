@@ -1,22 +1,20 @@
 class Transaction < ApplicationRecord
   belongs_to :user
-  belongs_to :account
+  belongs_to :source_account, class_name: 'Account', foreign_key: 'source_acc_id'
+  belongs_to :receiver_account, class_name: 'Account', foreign_key: 'receiver_acc_id'
 
-  BANK_OPERATION = ['credit', 'debit']
 
-  before_validation :operation_to_downcase
 
-  validates :user_id, :account_id, :operation, :amount, presence: true
+
+
+  validates :user_id, :source_acc_id,:receiver_acc_id, :receiver_accno, :receiver_acc_type, :receiver_name, :receiver_ifsc, :receiver_bank_name, :amount, presence: true
   
   validates :amount, numericality: true
   
-  validates :operation , inclusion: BANK_OPERATION
+  
   
 
 
-  def operation_to_downcase
-    self.operation = operation.downcase
-  end
 
   
 end
