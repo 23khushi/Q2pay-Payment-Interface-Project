@@ -11,8 +11,6 @@ Rails.application.routes.draw do
   resources :users 
   resources :accounts
   resources :transactions
-  post 'accounts/:id/add_money', to: 'accounts#add_money'
-  # get "/users/:aadhar_no", to: "users#show"
-  # get "/users/:pan_no", to: "users#show"
+  post 'accounts/transfer_money', to: 'accounts#transfer_money'
 
 end
