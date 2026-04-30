@@ -1,6 +1,7 @@
 class User < ApplicationRecord
     has_many :accounts
     has_many :transactions
+    has_many :otps
     
     validates :aadhar_no, presence: true, uniqueness: {message: "Already registered"}, format: { with: /\A[2-9]{1}[0-9]{11}\z/ , message: 'invalid, must be of 12 digits'}
     

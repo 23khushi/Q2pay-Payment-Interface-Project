@@ -8,7 +8,12 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :users 
+  resources :users do 
+    collection do
+      post :send_otp
+      post :verify_otp
+    end
+  end
   resources :accounts
   resources :transactions
   post 'accounts/transfer_money', to: 'accounts#transfer_money'
