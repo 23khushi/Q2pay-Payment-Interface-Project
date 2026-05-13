@@ -1,18 +1,11 @@
 class Bank < ApplicationRecord
   has_many :accounts
 
- 
-  BANK_NAME = ['hdfc', 'icici']
-  BANK_MAPPED_IFSC = {
-    'hdfc' => 'HDFC',
-    'icici' => 'ICIC'
-  }
+  before_validation :valid_ifsc_code
 
-  before_validation :baank_name_downcase, :valid_ifsc_code
-
-  validates :bank_name, presence: true, inclusion: BANK_NAME
+  validates :bank_name,:address,:branch,:city,:district,:state,  presence: true
   
-  validates :ifsc_code, presence: true, length: {maximum: 11}
+  validates :ifsc, presence: true, length: {maximum: 11}
 
 
   private
@@ -22,11 +15,9 @@ class Bank < ApplicationRecord
   end
 
    def valid_ifsc_code
-    actual_ifsc = BANK_MAPPED_IFSC[bank_name]
-    ifsc_initial = ifsc_code[0,4]
-    code = ifsc_code[4]
-    unless actual_ifsc == ifsc_initial || code == 0
-      errors.add(:ifsc_code,"is invalid for bank #{bank_name}")
+    actual_ifsc = Bank.includes?(ifsc)
+    unless actual_ifsc.present?
+     errors.add(:ifsc_code,"is invalid")
     end
    end
 end

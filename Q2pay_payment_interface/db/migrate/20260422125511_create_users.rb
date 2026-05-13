@@ -6,8 +6,8 @@ class CreateUsers < ActiveRecord::Migration[8.1]
       t.bigint :mobile_no, index: {unique: true}, null: false
       t.string :first_name, null:false
       t.string :last_name, null:false
-      t.integer :pin
-
+      t.string :email_id , null:false
+      t.boolean :status
       t.timestamps
     end
   end

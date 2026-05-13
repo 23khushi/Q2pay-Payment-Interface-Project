@@ -8,14 +8,16 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :users do 
-    collection do
-      post :send_otp
-      post :verify_otp
-    end
-  end
+  resources :users 
+
+  #user login
+  post '/users/login/', to: 'users#login'
+
+  #user aadhar verification
+  post '/users/aadhar-verification', to: 'users#verify_aadhar'
+
   resources :accounts
-  resources :transactions
-  post 'accounts/transfer_money', to: 'accounts#transfer_money'
+
+  resources :payments
 
 end

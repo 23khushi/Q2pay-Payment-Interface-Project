@@ -1,13 +1,26 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  user: one
-  acc_no: 
-  acc_type: MyString
-  balance: 9.99
+tina_saving:
+  id: 1
+  acc_no: 45674567
+  acc_type: "saving"
+  balance: 3000
+  user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
+  bank_id: 201
 
-two:
-  user: two
-  acc_no: 
-  acc_type: MyString
-  balance: 9.99
+rishi:
+  id: 2
+  acc_no: 87974567
+  acc_type: "current"
+  balance: 2000
+  user_id: "8ff963df-b879-5b14-aff5-186c2e22cb35"
+  bank_id: 202
+
+
+tina_current:
+  id: 3
+  acc_no: 45664576
+  acc_type: "current"
+  balance: 1500
+  user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
+  bank_id: 201

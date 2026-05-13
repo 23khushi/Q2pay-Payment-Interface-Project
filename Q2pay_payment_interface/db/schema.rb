@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_29_121200) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_11_114316) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -30,11 +30,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_121200) do
   end
 
   create_table "banks", force: :cascade do |t|
+    t.string "address"
+    t.integer "bank_id"
     t.string "bank_name"
-    t.datetime "created_at", null: false
-    t.string "ifsc_code"
-    t.datetime "updated_at", null: false
-    t.index ["ifsc_code"], name: "index_banks_on_ifsc_code", unique: true
+    t.string "branch"
+    t.string "city"
+    t.string "ifsc"
+    t.string "state"
+    t.index ["ifsc"], name: "index_banks_on_ifsc_code", unique: true
   end
 
   create_table "otps", force: :cascade do |t|
@@ -42,13 +45,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_121200) do
     t.datetime "expiry"
     t.boolean "is_used"
     t.integer "otp"
-    t.string "purpose"
     t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
     t.index ["user_id"], name: "index_otps_on_user_id"
   end
 
-  create_table "transactions", force: :cascade do |t|
+  create_table "payments", force: :cascade do |t|
     t.bigint "amount"
     t.datetime "created_at", null: false
     t.bigint "receiver_acc_id", null: false
@@ -58,21 +60,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_121200) do
     t.string "receiver_ifsc"
     t.string "receiver_name"
     t.bigint "source_acc_id", null: false
+    t.string "source_accno"
     t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
-    t.index ["receiver_acc_id"], name: "index_transactions_on_receiver_acc_id"
-    t.index ["source_acc_id"], name: "index_transactions_on_source_acc_id"
-    t.index ["user_id"], name: "index_transactions_on_user_id"
+    t.index ["receiver_acc_id"], name: "index_payments_on_receiver_acc_id"
+    t.index ["source_acc_id"], name: "index_payments_on_source_acc_id"
+    t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "aadhar_no", null: false
     t.datetime "created_at", null: false
+    t.string "email_id", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.bigint "mobile_no", null: false
     t.string "pan_no", null: false
-    t.integer "pin"
+    t.string "password_digest"
+    t.boolean "status"
     t.datetime "updated_at", null: false
     t.index ["aadhar_no"], name: "index_users_on_aadhar_no", unique: true
     t.index ["mobile_no"], name: "index_users_on_mobile_no", unique: true
@@ -82,7 +87,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_29_121200) do
   add_foreign_key "accounts", "banks"
   add_foreign_key "accounts", "users"
   add_foreign_key "otps", "users"
-  add_foreign_key "transactions", "accounts", column: "receiver_acc_id"
-  add_foreign_key "transactions", "accounts", column: "source_acc_id"
-  add_foreign_key "transactions", "users"
+  add_foreign_key "payments", "accounts", column: "receiver_acc_id"
+  add_foreign_key "payments", "accounts", column: "source_acc_id"
+  add_foreign_key "payments", "users"
 end

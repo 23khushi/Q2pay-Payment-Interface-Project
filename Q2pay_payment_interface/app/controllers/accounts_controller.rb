@@ -1,11 +1,8 @@
 class AccountsController < ApplicationController
-  
-
-  
-
+ 
   def index
      if params[:aadhar_no].present?
-        @user_accounts = User.includes(:accounts).where(aadhar_no: params[:aadhar_no]) 
+        @user_accounts = User.includes(:accounts).where(aadhar_no: params[:aadhar_no])
       end
 
       if params[:pan_no].present?
@@ -16,46 +13,47 @@ class AccountsController < ApplicationController
         @user_accounts = User.includes(:accounts).where(mobile_no: params[:mobile_no])
       end
 
-      render :index
+      render 'index', status: :ok
   end
 
-  def show
 
-  end
-
-  def update
-
-  end
-
-  def destroy
-    @account = Account.find_by(id: params[:id])
-    if @account.softdelete
-      render json: "Account deleted for id #{params[:id]}"
-    else
-      render json: {errors: 'Not found'}
-    end
-  end
-
-  def transfer_money
-    @account = Account.find_by(acc_no: params[:source_accno])
-    pp @account
-    if @account.present?
-      if @account.transfer(transfer_params)
-        render json: 'Transaction successfull'
+  def create
+    @user = User.find_by(aadhar_no: params[:aadhar_no])
+    if @user.present?
+      @bank = Bank.find(bank_params)
+      @account = user.accounts.build(acc_type: account_params[:acc_type], balance: account_params[:balance], bank_id: @bank.id )
+      if @account.save 
+        render json: {message: "Account created for existing user"}, status: :ok
       else
-        render json: {errors: @account.errors.full_messages}
+        render json: {errors: @account.errors.full_messages}, status: :unprocessable_entity
       end
     else
-      render json:"Account not present with account id #{params[:id]}"
+      render json: {errors: "User not found!"}, status: :not_found
     end
-
   end
+
+
+  
+  def destroy
+    @account = Account.find_by(id: params[:id])
+    if @account
+      @account.softdelete
+      render json: {message: "Account deleted for id #{params[:id]}"}, status: :ok
+    else
+      render json: {errors: 'Account doesnt exists'}, status: :unprocessable_entity
+    end
+  end
+
 
 
   private
 
-  def transfer_params
-    params.permit(:amount, :receiver_accno)
+  def account_params
+    params.permit(:acc_type, :balance)
+  end
+
+  def bank_params
+    params.permit(:ifsc)
   end
 
 end

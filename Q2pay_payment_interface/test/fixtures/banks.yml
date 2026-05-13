@@ -1,13 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  account: one
-  bank_name: MyString
-  ifsc_code: MyString
-  string: MyString
+tina:
+  id: 201
+  bank_name: "icici"
+  ifsc_code: "ICIC0000123" 
 
-two:
-  account: two
-  bank_name: MyString
-  ifsc_code: MyString
-  string: MyString
+rishi:
+  id: 202
+  bank_name: "icici"
+  ifsc_code: "ICIC0002222" 

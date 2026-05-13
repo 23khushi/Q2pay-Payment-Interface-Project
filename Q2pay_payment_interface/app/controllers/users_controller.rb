@@ -1,88 +1,86 @@
 class UsersController < ApplicationController
-before_action :send_otp, only: [:send_otp]
-before_action :verify_otp, only: [:verify_otp]
+before_action :set_params, only: [:show, :update]
+skip_before_action :authenticate_user, only: [:create, :login]
   def index
-      @users = User.all
-      render 'index'
+    @users = User.all
+    render 'index', status: :ok
   end
 
   def show
-    
+    render 'show', status: :ok
   end
-
-
 
   def create
-    ActiveRecord::Base.transaction do
-      @user = User.find_by(user_params)
-      @bank = Bank.find_or_create_by!(bank_params)
-      if @user.present?
-        @account = @user.accounts.create!(account_params.merge(bank: @bank))
-        render json: 'Account created for existing user'
-      else 
-        @user = User.create!(user_params)
-        @account = @user.accounts.create!(account_params.merge(bank: @bank))
-        render json: 'User created!!'
+    @user =  User.new(user_params)
+    @bank = Bank.find_by(bank_params)
+    account = @user.accounts.where(account_params).build(bank_id: @bank.id)
+    if @user.save
+      render :create , status: :created
+    else
+      render json: {errors: @user.errors.full_messages + account.errors.full_messages}, status: :unprocessable_entity
+    end
+  end
+
+
+  def verify_aadhar
+    aadhar_data = AadharVerificationLookup.find_aadhar(params[:aadhar_no])
+    begin
+      if aadhar_data.present?
+        if aadhar_data[:mobile_no] == params[:mobile_no]
+          current_user.update(status: true)
+          render json:{message: "Verified"}, status: :ok
+        else
+          render json:{errors: "Invalid data"} , status: :unprocessable_entity 
+        end
+      else
+        render json: {errors: "Invalid aadhar"}, status: :unprocessable_entity
+      end
+    rescue
+      render json: {errors: "Something went wrong"}, status: :unprocessable_entity
+    end
+  end
+
+
+  def login
+    @user = UserLogin.login(params[:email_id], params[:password])
+    if @user[:success]
+      token = @user[:token]
+      render json: token, status: :ok
+    else
+      if @user[:message].present?
+        render json: {message: @user[:message]}, status: :unprocessable_entity
       end
     end
-    rescue => e
-      render json: {errors: e.message}
   end
 
-
-  def destroy
-  end
+  
 
   def update
-    @user = User.find_by(id: params[:id])
     if @user.update(user_params)
-      render json: 'Updated successfully!'
+      render 'show' , status: :ok
     else
-      render json:{errors: @user.errors.full_messages}
+      render json: { errors: @user.errors.full_messages}, status: :unprocessable_entity
     end
-  end
-
-  def find_user
-    if params[:aadhar_no].present?
-      @user = User.find_by(aadhar_no: params[:aadhar_no])
-    elsif params[:pan_no].present?
-      @user = User.find_by(pan_no: params[:pan_no])
-    elsif params[:mobile_no].present?
-      @user = User.find_by(mobile_no: params[:mobile_no])
-    else
-      nil
-    end
-  end
-
-  def send_otp
-   user = find_user
-    return render json: "User not found " unless user
-    otp = Otp.generate_otp(user, params[:purpose])
-    pp otp
-    render json: {message: "Otp sent for #{params[:purpose]}: #{otp.otp}"}
-  end
-
-  def verify_otp
-    user_verify = find_user
-    return render json: "User not found " unless user_verify
-
-    Otp.verify_otp(user_verify,params[:purpose], params[:otp] )
-    render json: {message: "Otp successfully verified for #{params[:purpose]}"}
-  end
+  end    
+ 
 
   private 
 
   def user_params
-    params.permit(:aadhar_no, :pan_no, :mobile_no, :first_name, :last_name, :pin )
+    params.permit(:aadhar_no, :pan_no, :mobile_no, :first_name, :last_name, :email_id, :password, :password_confirmation)
   end
 
   def account_params
     params.permit(:acc_type, :balance)
   end
-
   def bank_params
-    params.permit(:bank_name, :ifsc_code)
+    params.permit(:ifsc)
   end
 
-  
+  def set_params
+    @user =  User.find_by(id: params[:id])
+    unless @user.present?
+      render json: { message: "User not found" }, status: :unprocessable_entity
+    end
+  end
 end

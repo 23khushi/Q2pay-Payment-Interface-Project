@@ -1,9 +1,10 @@
 class CreateTransactions < ActiveRecord::Migration[8.1]
   def change
-    create_table :transactions do |t|
+    create_table :payments do |t|
       t.references :user, type: :uuid, null: false, foreign_key: true
       t.references :source_acc, null: false, foreign_key: { to_table: :accounts }
       t.references :receiver_acc, null: false, foreign_key: { to_table: :accounts }
+      t.string :source_accno
       t.bigint :amount
       t.string :receiver_accno
       t.string :receiver_acc_type
