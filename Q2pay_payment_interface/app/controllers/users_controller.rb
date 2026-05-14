@@ -53,8 +53,6 @@ skip_before_action :authenticate_user, only: [:create, :login]
     end
   end
 
-  
-
   def update
     if @user.update(user_params)
       render 'show' , status: :ok

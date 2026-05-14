@@ -7,14 +7,11 @@ class PaymentsController < ApplicationController
 
 
   def create
-    @account = Account.find_by(acc_no: params[:source_accno])
-    if @account.nil?
-      render json: {errors: 'Source account doesnt exist!'}, status: :unprocessable_entity
-      return
-    end
+    @account = current_user.accounts.pluck(:acc_no)
+    @account = @account[0].to_i
     begin
       @pay = Payment.new
-      if @pay.transfer(transaction_params)
+      if @pay.transfer(source_accno: @account, amount: params[:amount], receiver_accno: params[:receiver_accno])
         render json: {message: "Transaction successfull"} , status: :ok
       else
         render json: {errors: @pay.errors.full_messages }, status: :unprocessable_entity
@@ -24,8 +21,4 @@ class PaymentsController < ApplicationController
     end
   end
 
-  private 
-  def transaction_params
-    params.permit(:source_accno, :amount, :receiver_accno)
-  end
 end

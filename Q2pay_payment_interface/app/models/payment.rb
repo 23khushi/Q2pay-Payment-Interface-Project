@@ -43,7 +43,7 @@ class Payment < ApplicationRecord
       receiver_accno: data[:receiver_accno],
       receiver_acc_type: destination_account.acc_type,
       receiver_name: destination_account.user.first_name,
-      receiver_ifsc: destination_account.bank.ifsc_code, 
+      receiver_ifsc: destination_account.bank.ifsc, 
       receiver_bank_name: destination_account.bank.bank_name
     )
     unless payment.save
