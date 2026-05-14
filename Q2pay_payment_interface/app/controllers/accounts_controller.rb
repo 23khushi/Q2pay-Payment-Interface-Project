@@ -1,27 +1,30 @@
 class AccountsController < ApplicationController
  
   def index
-     if params[:aadhar_no].present?
-        @user_accounts = User.includes(:accounts).where(aadhar_no: params[:aadhar_no])
-      end
+      @user_accounts = current_user
 
-      if params[:pan_no].present?
-        @user_accounts = User.includes(:accounts).where(pan_no: params[:pan_no])
-      end
 
-      if params[:mobile_no].present?
-        @user_accounts = User.includes(:accounts).where(mobile_no: params[:mobile_no])
-      end
+    #  if params[:aadhar_no].present?
+    #     @user_accounts = User.includes(:accounts).where(aadhar_no: params[:aadhar_no])
+    #   end
+
+    #   if params[:pan_no].present?
+    #     @user_accounts = User.includes(:accounts).where(pan_no: params[:pan_no])
+    #   end
+
+    #   if params[:mobile_no].present?
+    #     @user_accounts = User.includes(:accounts).where(mobile_no: params[:mobile_no])
+    #   end
 
       render 'index', status: :ok
   end
 
 
   def create
-    @user = User.find_by(aadhar_no: params[:aadhar_no])
+    @user = current_user
     if @user.present?
-      @bank = Bank.find(bank_params)
-      @account = user.accounts.build(acc_type: account_params[:acc_type], balance: account_params[:balance], bank_id: @bank.id )
+      @bank = Bank.find_by(ifsc: params[:ifsc])
+      @account = @user.accounts.build(acc_type: account_params[:acc_type], balance: account_params[:balance], bank_id: @bank.id )
       if @account.save 
         render json: {message: "Account created for existing user"}, status: :ok
       else
@@ -52,8 +55,5 @@ class AccountsController < ApplicationController
     params.permit(:acc_type, :balance)
   end
 
-  def bank_params
-    params.permit(:ifsc)
-  end
 
 end

@@ -1,9 +1,9 @@
 json.extract! user
-json.name user.first_name + " " + user.last_name
-json.accounts_details user.accounts do |account|
+json.name user.first_name.concat(" ", user.last_name)
+ json.accounts_details user.accounts do |account|
     json.account_number account.acc_no
     json.account_type account.acc_type
     json.balance account.balance
     json.bank_name  account.bank.bank_name.upcase
-    json.ifsc_code  account.bank.ifsc_code    
+    json.ifsc_code  account.bank.ifsc   
 end
