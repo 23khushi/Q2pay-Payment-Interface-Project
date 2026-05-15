@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 before_action :set_params, only: [:show, :update]
 skip_before_action :authenticate_user, only: [:create, :login]
+
   def index
     @users = User.all
     render 'index', status: :ok
@@ -33,7 +34,7 @@ skip_before_action :authenticate_user, only: [:create, :login]
           render json:{errors: "Invalid data"} , status: :unprocessable_entity 
         end
       else
-        render json: {errors: "Invalid aadhar"}, status: :unprocessable_entity
+        render json: {errors: "Invalid aadhar number"}, status: :unprocessable_entity
       end
     rescue
       render json: {errors: "Something went wrong"}, status: :unprocessable_entity
@@ -45,10 +46,10 @@ skip_before_action :authenticate_user, only: [:create, :login]
     @user = UserLogin.login(params[:email_id], params[:password])
     if @user[:success]
       token = @user[:token]
-      render json: token, status: :ok
+      render json: {message: "Login Successful", token: token}, status: :ok
     else
       if @user[:message].present?
-        render json: {message: @user[:message]}, status: :unprocessable_entity
+        render json: {errors: @user[:message]}, status: :unprocessable_entity
       end
     end
   end

@@ -3,11 +3,11 @@
 # one:
 #   user: one
 #   otp: 1
-#   purpose: MyString
+#   # purpose: MyString
 #   expiry: 2026-04-29 17:42:00
 
 # two:
 #   user: two
 #   otp: 1
-#   purpose: MyString
+#   # purpose: MyString
 #   expiry: 2026-04-29 17:42:00

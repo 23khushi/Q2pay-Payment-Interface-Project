@@ -5,15 +5,20 @@ tina:
   aadhar_no: "667656565123"
   first_name: "Tina"
   last_name: "Patil"
+  email_id: "tina@gmail.com"
+  password_digest: "$2a$12$/mR/VAuoC7Zn7vS5zc0oC.yxlwzdWMUpGLFvblWJVtTtHIbyHFonG"
+  #pass = tina123
   pan_no: "SXDPS2246Q"
   mobile_no: 9034376311
-  pin: 1234
+  status: true
 
 rishi:
   id: "8ff963df-b879-5b14-aff5-186c2e22cb35"
   aadhar_no: "557656565123"
   first_name: "Rishi"
   last_name: "Patel"
+  email_id: "rishi@gmail.com"
+  password_digest: "$2a$12$5Wg/dBKS3HTvR7dIFRQYe.qcMwtyk310AHhxXnTPlNfRAsXtwhSrW"
   pan_no: "ECDPS2246Q"
   mobile_no: 8934376311
-  pin: 2222
+  status: true

@@ -4,6 +4,19 @@ require "rails/test_help"
 
 module ActiveSupport
   class TestCase  
+    def user_token
+      result = UserLogin.login("tina@gmail.com", "tina123")
+      if result[:success]
+        result[:token]
+      else
+        result[:message]   
+      end
+    end
+
+
+
+
+
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 

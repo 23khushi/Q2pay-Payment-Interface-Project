@@ -25,7 +25,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_11_114316) do
     t.uuid "user_id", null: false
     t.index ["acc_no"], name: "index_accounts_on_acc_no", unique: true
     t.index ["bank_id"], name: "index_accounts_on_bank_id"
-    t.index ["deleted_at"], name: "index_accounts_on_deleted_at"
     t.index ["user_id"], name: "index_accounts_on_user_id"
   end
 
@@ -35,6 +34,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_11_114316) do
     t.string "bank_name"
     t.string "branch"
     t.string "city"
+    t.string "district", limit: 50
     t.string "ifsc"
     t.string "state"
     t.index ["ifsc"], name: "index_banks_on_ifsc_code", unique: true
@@ -80,6 +80,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_11_114316) do
     t.boolean "status"
     t.datetime "updated_at", null: false
     t.index ["aadhar_no"], name: "index_users_on_aadhar_no", unique: true
+    t.index ["email_id"], name: "index_users_on_email_id", unique: true
     t.index ["mobile_no"], name: "index_users_on_mobile_no", unique: true
     t.index ["pan_no"], name: "index_users_on_pan_no", unique: true
   end

@@ -1,11 +1,24 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 tina:
-  id: 201
-  bank_name: "icici"
-  ifsc_code: "ICIC0000123" 
+  id: 1
+  bank_name: "ABHYUDAYA COOPERATIVE BANK LIMITED"
+  ifsc: "ABHY0065017" 
+  address: "ABHYUDAYA BANK BLDG., SECTOR 17, VASHI, NAVI MUMBAI-400703"
+  bank_id: 60
+  branch:  "MOBILE BANK"
+  city: "MUMBAI"
+  state: "MAHARASHTRA"
+  # district: "GREATER MUMBAI"
+
 
 rishi:
-  id: 202
-  bank_name: "icici"
-  ifsc_code: "ICIC0002222" 
+  id: 2
+  bank_name: "ABHYUDAYA COOPERATIVE BANK LIMITED"
+  ifsc: "ABHY0065101" 
+  address: "598  DHANVANT PLAZA BHUDWAR PETH PUNE- 411002"
+  bank_id: 60
+  branch:  "PUNE SERVICE BRANCH"
+  city: "PUNE"
+  state: "MAHARASHTRA"
+  # district: "PUNE"

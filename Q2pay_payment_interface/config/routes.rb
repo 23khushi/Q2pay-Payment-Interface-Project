@@ -13,8 +13,6 @@ Rails.application.routes.draw do
   #user login
   post '/users/login/', to: 'users#login'
 
-
-
   #user aadhar verification
   post '/users/aadhar-verification', to: 'users#verify_aadhar'
 

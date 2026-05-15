@@ -6,7 +6,7 @@ tina_saving:
   acc_type: "saving"
   balance: 3000
   user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
-  bank_id: 201
+  bank_id: 1
 
 rishi:
   id: 2
@@ -14,7 +14,7 @@ rishi:
   acc_type: "current"
   balance: 2000
   user_id: "8ff963df-b879-5b14-aff5-186c2e22cb35"
-  bank_id: 202
+  bank_id: 2
 
 
 tina_current:
@@ -23,4 +23,4 @@ tina_current:
   acc_type: "current"
   balance: 1500
   user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
-  bank_id: 201
+  bank_id: 2

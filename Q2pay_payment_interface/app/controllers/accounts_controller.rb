@@ -2,20 +2,6 @@ class AccountsController < ApplicationController
  
   def index
       @user_accounts = current_user
-
-
-    #  if params[:aadhar_no].present?
-    #     @user_accounts = User.includes(:accounts).where(aadhar_no: params[:aadhar_no])
-    #   end
-
-    #   if params[:pan_no].present?
-    #     @user_accounts = User.includes(:accounts).where(pan_no: params[:pan_no])
-    #   end
-
-    #   if params[:mobile_no].present?
-    #     @user_accounts = User.includes(:accounts).where(mobile_no: params[:mobile_no])
-    #   end
-
       render 'index', status: :ok
   end
 

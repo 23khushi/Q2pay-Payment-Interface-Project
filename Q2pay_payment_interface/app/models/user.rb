@@ -18,7 +18,7 @@ class User < ApplicationRecord
 
     validates :last_name, presence: true, format: {with: /\A[A-Za-z]*\z/, message: 'should only contain letters '}
 
-    validates :email_id, presence: true, format:{with: URI::MailTo::EMAIL_REGEXP, message: "Invalid mail id!"}
+    validates :email_id, presence: true, uniqueness: {message: "Already registered"}, format:{with: URI::MailTo::EMAIL_REGEXP, message: "Invalid mail id!"}
     
 
 end
