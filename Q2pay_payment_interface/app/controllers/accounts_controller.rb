@@ -1,8 +1,8 @@
 class AccountsController < ApplicationController
  
   def index
-      @user_accounts = current_user
-      render 'index', status: :ok
+    @user_accounts = current_user
+    render 'index', status: :ok
   end
 
 
@@ -24,7 +24,7 @@ class AccountsController < ApplicationController
 
   
   def destroy
-    @account = Account.find_by(id: params[:id])
+    @account = current_user.accounts.find_by(id: params[:id])
     if @account
       @account.softdelete
       render json: {message: "Account deleted for id #{params[:id]}"}, status: :ok

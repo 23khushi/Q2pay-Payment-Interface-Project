@@ -55,10 +55,10 @@ skip_before_action :authenticate_user, only: [:create, :login]
   end
 
   def update
-    if @user.update(user_params)
-      render 'show' , status: :ok
+    if current_user.update(user_params)
+      render 'update' , status: :ok
     else
-      render json: { errors: @user.errors.full_messages}, status: :unprocessable_entity
+      render json: { errors: current_user.errors.full_messages}, status: :unprocessable_entity
     end
   end    
  
@@ -79,7 +79,7 @@ skip_before_action :authenticate_user, only: [:create, :login]
   def set_params
     @user =  User.find_by(id: params[:id])
     unless @user.present?
-      render json: { message: "User not found" }, status: :unprocessable_entity
+      render json: {errors: "User not found" }, status: :not_found
     end
   end
 end

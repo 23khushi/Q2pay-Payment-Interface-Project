@@ -1,6 +1,6 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-tina:
+bank_one:
   id: 1
   bank_name: "ABHYUDAYA COOPERATIVE BANK LIMITED"
   ifsc: "ABHY0065017" 
@@ -12,7 +12,7 @@ tina:
   # district: "GREATER MUMBAI"
 
 
-rishi:
+bank_two:
   id: 2
   bank_name: "ABHYUDAYA COOPERATIVE BANK LIMITED"
   ifsc: "ABHY0065101" 

@@ -1,7 +1,7 @@
 class User < ApplicationRecord
     
     has_many :accounts
-    has_many :transactions
+    has_many :payments
     has_many :otps
   
     has_secure_password

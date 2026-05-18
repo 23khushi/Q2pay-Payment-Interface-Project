@@ -18,6 +18,10 @@ Rails.application.routes.draw do
 
   resources :accounts
 
-  resources :payments
+  # create transaction 
+  post '/transactions', to: 'payments#create'
+
+  #get transactions
+  get '/transactions', to: 'payment#index'
 
 end

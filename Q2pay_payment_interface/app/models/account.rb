@@ -1,7 +1,7 @@
 class Account < ApplicationRecord
   belongs_to :user
   belongs_to :bank
-  has_many :transactions
+  has_many :payments
   default_scope -> {where(deleted_at: nil)}
   require 'securerandom'
   
