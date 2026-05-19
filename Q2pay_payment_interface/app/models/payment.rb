@@ -24,6 +24,10 @@ class Payment < ApplicationRecord
       errors.add(:base, "Destination account does not exist!") 
       return 
     end
+    unless source_account.present? 
+      errors.add(:base, "Source account does not exist!") 
+      return 
+    end
     if source_account.id == destination_account.id
       errors.add(:base, "cannot transfer to same account")  
       return 

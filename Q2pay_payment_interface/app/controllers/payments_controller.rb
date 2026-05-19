@@ -7,7 +7,7 @@ class PaymentsController < ApplicationController
 
 
   def create
-    @account = current_user.accounts.find_by(acc_no: params[:source_accno])
+    @account = current_user.accounts
     begin
       if @account
         @pay = Payment.new
@@ -17,10 +17,10 @@ class PaymentsController < ApplicationController
           render json: {errors: @pay.errors.full_messages }, status: :unprocessable_entity
         end
       else 
-        render json: {errors: "Source account does not exist"}, status: :unprocessable_entity
+        render json: {errors: "User Account does not exist"}, status: :unprocessable_entity
       end
-    #  rescue
-    #   render json: {message: "Something went wrong"}, status: :unprocessable_entity
+     rescue
+      render json: {message: "Something went wrong"}, status: :unprocessable_entity
     end
   end
 

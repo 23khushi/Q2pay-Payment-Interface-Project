@@ -21,8 +21,6 @@ class AccountsController < ApplicationController
     end
   end
 
-
-  
   def destroy
     @account = current_user.accounts.find_by(id: params[:id])
     if @account
@@ -33,10 +31,7 @@ class AccountsController < ApplicationController
     end
   end
 
-
-
   private
-
   def account_params
     params.permit(:acc_type, :balance)
   end
