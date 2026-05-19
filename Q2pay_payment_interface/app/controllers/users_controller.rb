@@ -27,9 +27,9 @@ skip_before_action :authenticate_user, only: [:create, :login]
     aadhar_data = AadharVerificationLookup.find_aadhar(params[:aadhar_no])
     begin
       if aadhar_data.present?
-        if aadhar_data[:mobile_no] == params[:mobile_no]
+        if aadhar_data[:mobile_no] == params[:mobile_no].to_i
           current_user.update(status: true)
-          render json:{message: "Verified"}, status: :ok
+          render json:{message: "Verified"}, status: :ok 
         else
           render json:{errors: "Invalid data"} , status: :unprocessable_entity 
         end

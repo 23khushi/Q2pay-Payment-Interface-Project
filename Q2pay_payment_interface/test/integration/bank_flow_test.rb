@@ -272,6 +272,42 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test 'User verification of registered user with valid details' do
+    post '/users/aadhar-verification.json',
+    params: {
+      aadhar_no: "667656565123",
+      mobile_no: 9034376311
+    },
+    headers: {Authorization: "Bearer #{user_token}"}
+    resp = JSON.parse(response.body)
+    assert_equal 'Verified', resp['message']
+    assert_response :ok
+  end
+
+  test 'User verification of registered user with valid aadhar and invalid mobile no' do
+    post '/users/aadhar-verification.json',
+    params: {
+      aadhar_no: "667656565123",
+      mobile_no: 9034376322
+    },
+    headers: {Authorization: "Bearer #{user_token}"}
+    resp = JSON.parse(response.body)
+    assert_equal 'Invalid data', resp['errors']
+    assert_response :unprocessable_entity
+  end
+
+  test 'User verification of registered user with invalid details' do
+    post '/users/aadhar-verification.json',
+    params: {
+      aadhar_no: "447656565123",
+      mobile_no: 9034376322
+    },
+    headers: {Authorization: "Bearer #{user_token}"}
+    resp = JSON.parse(response.body)
+    assert_equal 'Invalid aadhar number', resp['errors']
+    assert_response :unprocessable_entity
+  end
+
 #---------------------Account-------------------------------------------------------------
 
   test 'show all accounts for logged in user' do
@@ -407,5 +443,6 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
   
+
 end
 

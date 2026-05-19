@@ -60,6 +60,18 @@ class AadharVerificationLookup
     acc_type: "saving",
     balance: "2000",
     ifsc: "BARB0BIRWAD"
+    },
+    "667656565123" => {
+      pan_no: "SXDPS2246Q",
+      mobile_no: 9034376311,
+      first_name: "Tina",
+      last_name: "Patil",
+      email_id: "tina@gmail.com",
+      password: "tina123",
+      password_confirmation: "tina123",
+      acc_type: "saving",
+      balance: 3000,
+      ifsc: "ABHY0065017" 
     }
   }
     def self.find_aadhar(aadhar_no)

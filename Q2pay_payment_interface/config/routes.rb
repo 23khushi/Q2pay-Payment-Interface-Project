@@ -22,6 +22,6 @@ Rails.application.routes.draw do
   post '/transactions', to: 'payments#create'
 
   #get transactions
-  get '/transactions', to: 'payment#index'
+  get '/transactions', to: 'payments#index'
 
 end
