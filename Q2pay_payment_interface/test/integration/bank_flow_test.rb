@@ -90,7 +90,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
 
  test 'should not create user if initial balance for current less than 500' do
     post '/users.json',
-     params: user_details.except(:balance).merge(balance: 100),
+    params: user_details.except(:acc_type, :balance).merge(acc_type: 'current', balance: 100),
     headers: {}
     resp = json_response
     assert_equal "Balance must be greater than 500 for current account", resp["errors"][1]
@@ -184,7 +184,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     },
     headers: {Authorization: "Bearer #{user_token}"}
     resp = json_response
-    assert_equal 'Invalid data', resp['errors']
+    assert_equal 'Invalid mobile number', resp['errors']
     assert_response :unprocessable_entity
   end
 
@@ -334,6 +334,17 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     assert_equal 'cannot transfer to same account', resp["errors"].first
     assert_response :unprocessable_entity
   end
+
+  # test 'view all the transactions of LoggedIn user' do
+  #   get '/transactions.json',
+  #   params: {},
+  #   headers: {Authorization: "Bearer #{user_token}"}
+  #   resp = json_response
+  #   pp resp
+  #   pp resp[0]
+  #   assert_equal '{"source_account_number" => 45674567, "amount" => 100, "receiver_account_number" => 45664576}', resp[0]
+  #   assert_response :ok
+  # end
   
   def user_details
     {"aadhar_no": "445566778899",

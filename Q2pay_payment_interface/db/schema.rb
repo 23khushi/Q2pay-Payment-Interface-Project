@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_11_114316) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_20_065520) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,18 +54,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_11_114316) do
     t.bigint "amount"
     t.datetime "created_at", null: false
     t.bigint "receiver_acc_id", null: false
-    t.string "receiver_acc_type"
-    t.string "receiver_accno"
-    t.string "receiver_bank_name"
-    t.string "receiver_ifsc"
-    t.string "receiver_name"
     t.bigint "source_acc_id", null: false
-    t.string "source_accno"
+    t.uuid "source_user_id", null: false
     t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
     t.index ["receiver_acc_id"], name: "index_payments_on_receiver_acc_id"
     t.index ["source_acc_id"], name: "index_payments_on_source_acc_id"
-    t.index ["user_id"], name: "index_payments_on_user_id"
+    t.index ["source_user_id"], name: "index_payments_on_source_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -90,5 +84,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_11_114316) do
   add_foreign_key "otps", "users"
   add_foreign_key "payments", "accounts", column: "receiver_acc_id"
   add_foreign_key "payments", "accounts", column: "source_acc_id"
-  add_foreign_key "payments", "users"
+  add_foreign_key "payments", "users", column: "source_user_id"
 end

@@ -31,7 +31,7 @@ skip_before_action :authenticate_user, only: [:create, :login]
           current_user.update(status: true)
           render json:{message: "Verified"}, status: :ok 
         else
-          render json:{errors: "Invalid data"} , status: :unprocessable_entity 
+          render json:{errors: "Invalid mobile number"} , status: :unprocessable_entity 
         end
       else
         render json: {errors: "Invalid aadhar number"}, status: :unprocessable_entity

@@ -1,9 +1,17 @@
 class PaymentsController < ApplicationController
 
   def index
-    @pay = Payment.all
-    render :index, status: :ok
+    # @payments = current_user.payments
+    begin
+      @payments = Payment.fetch_index(fetch_params, current_user)
+      render :index, status: :ok
+    rescue => e 
+      render json: {errors: e.message}, status: :unprocessable_entity
+    end
   end
+
+
+   
 
 
   def create
@@ -19,13 +27,19 @@ class PaymentsController < ApplicationController
       else 
         render json: {errors: "User Account does not exist"}, status: :unprocessable_entity
       end
-     rescue
-      render json: {message: "Something went wrong"}, status: :unprocessable_entity
+     rescue ActiveRecord::RecordInvalid => e
+      render json: {errors: e.message}, status: :unprocessable_entity
+    rescue
+      render json: {errors: e.message}, status: :unprocessable_entity
     end
   end
 
   private
   def payment_params
     params.permit(:source_accno, :amount,:receiver_accno)
+  end
+
+  def fetch_params
+    params.permit(:minimum, :maximum, :operation)
   end
 end

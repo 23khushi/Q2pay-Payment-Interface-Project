@@ -19,6 +19,7 @@ rishi:
   last_name: "Patel"
   email_id: "rishi@gmail.com"
   password_digest: "$2a$12$5Wg/dBKS3HTvR7dIFRQYe.qcMwtyk310AHhxXnTPlNfRAsXtwhSrW"
-  pan_no: "ECDPS2246Q"
+  #pass = rishi123
+  pan_no: "ECDPS2246Q" 
   mobile_no: 8934376311
   status: true

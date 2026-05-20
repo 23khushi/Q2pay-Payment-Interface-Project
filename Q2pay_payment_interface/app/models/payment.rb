@@ -1,12 +1,12 @@
 class Payment < ApplicationRecord
-  belongs_to :user
+  belongs_to :source_user, class_name: 'User', foreign_key: 'source_user_id'
   belongs_to :source_account, class_name: 'Account', foreign_key: 'source_acc_id'
   belongs_to :receiver_account, class_name: 'Account', foreign_key: 'receiver_acc_id'
 
 
   before_validation :amount_cant_be_negative
 
-  validates :user_id, :source_acc_id,:receiver_acc_id, :receiver_accno, :receiver_acc_type, :receiver_name, :receiver_ifsc, :receiver_bank_name, :amount, presence: true
+  validates :source_user_id, :source_acc_id,:receiver_acc_id, :amount, presence: true
   
   validates :amount, numericality: true
 
@@ -38,23 +38,32 @@ class Payment < ApplicationRecord
     end
     source_account.update!(balance: source_account[:balance] - data[:amount])
     destination_account.update!(balance: destination_account[:balance] + data[:amount])
-    payment = Payment.create(
+    payment = Payment.create!(
       source_acc_id: source_account.id,
-      user_id: source_account.user_id,
+      source_user_id: source_account.user_id,
       receiver_acc_id: destination_account.id,
-      source_accno: source_account.acc_no,
-      amount: data[:amount],
-      receiver_accno: data[:receiver_accno],
-      receiver_acc_type: destination_account.acc_type,
-      receiver_name: destination_account.user.first_name,
-      receiver_ifsc: destination_account.bank.ifsc, 
-      receiver_bank_name: destination_account.bank.bank_name
+      amount: data[:amount]
     )
-    unless payment.save
-      errors.add(:base, payment.errors.full_messages.join())
-      return false
-    end
-
     true
   end  
+  
+  def self.fetch_index(params, current_user)
+    payments = Payment.where('source_user_id IN (?) OR receiver_acc_id IN (?) ', current_user.id, current_user.accounts.ids)
+    if params[:minimum].present?
+      payments = current_user.payments.where('amount >= ?', params[:minimum])
+    end
+    if params[:maximum].present?
+      payments = current_user.payments.where('amount <= ?', params[:maximum])
+    end
+    if params[:operation].present?
+      if params[:operation].downcase == 'credit'
+        payments = Payment.where(receiver_acc_id: current_user.accounts.ids)
+      elsif params[:operation].downcase == 'debit'
+        payments = Payment.where(source_acc_id: current_user.accounts.ids)
+      else
+        raise "Invalid Operation"
+      end
+    end
+    payments
+  end
 end

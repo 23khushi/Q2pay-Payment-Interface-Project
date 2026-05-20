@@ -1,28 +1,20 @@
 # # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# one:
-#   id: 1
-#   amount: 100
-#   receiver_acc_id: 3
-#   receiver_acc_type: "current"
-#   receiver_accno: 45664576
-#   receiver_bank_name: "ABHYUDAYA COOPERATIVE BANK LIMITED"
-#   receiver_ifsc: "ABHY0065101"
-#   source_acc_id: 1
-#   source_accno: 45674567
-#   user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
+one:
+  id: 1
+  amount: 100
+  receiver_acc_id: 3
+  source_acc_id: 1
+  source_user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
   
-# two:
-#   id: 2
-#   amount: 100
-#   receiver_acc_id: 1
-#   receiver_acc_type: "saving"
-#   receiver_accno: 45674567
-#   receiver_bank_name: "ABHYUDAYA COOPERATIVE BANK LIMITED"
-#   receiver_ifsc: "ABHY0065017"
-#   source_acc_id: 3
-#   source_accno: 45664576
-#   user_id: "ee25ac701-1b69-4d84-b596-956ba3951f18"
+
+two:
+  id: 2
+  amount: 100
+  receiver_acc_id: 1
+  source_acc_id: 2
+  source_user_id: "8ff963df-b879-5b14-aff5-186c2e22cb35"
+  
 
 
 
