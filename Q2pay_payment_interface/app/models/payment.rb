@@ -48,22 +48,25 @@ class Payment < ApplicationRecord
   end  
   
   def self.fetch_index(params, current_user)
-    payments = Payment.where('source_user_id IN (?) OR receiver_acc_id IN (?) ', current_user.id, current_user.accounts.ids)
+    payments = Payment.where('source_user_id = ? OR receiver_acc_id IN (?)', current_user.id, current_user.accounts.ids)
     if params[:minimum].present?
       payments = payments.where('amount >= ?', params[:minimum])
     end
+  
     if params[:maximum].present?
       payments = payments.where('amount <= ?', params[:maximum])
     end
+  
     if params[:operation].present?
-      if params[:operation].downcase == 'credit'
-        payments = Payment.where(receiver_acc_id: current_user.accounts.ids)
-      elsif params[:operation].downcase == 'debit'
-        payments = Payment.where(source_acc_id: current_user.accounts.ids)
+      case params[:operation].downcase
+      when 'credit'
+        payments = payments.where(receiver_acc_id: current_user.accounts.ids)
+      when 'debit'
+        payments = payments.where(source_acc_id: current_user.accounts.ids)
       else
         raise "Invalid Operation"
       end
     end
-    payments
+    payments   
   end
 end
