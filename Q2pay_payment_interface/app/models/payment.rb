@@ -50,10 +50,10 @@ class Payment < ApplicationRecord
   def self.fetch_index(params, current_user)
     payments = Payment.where('source_user_id IN (?) OR receiver_acc_id IN (?) ', current_user.id, current_user.accounts.ids)
     if params[:minimum].present?
-      payments = current_user.payments.where('amount >= ?', params[:minimum])
+      payments = payments.where('amount >= ?', params[:minimum])
     end
     if params[:maximum].present?
-      payments = current_user.payments.where('amount <= ?', params[:maximum])
+      payments = payments.where('amount <= ?', params[:maximum])
     end
     if params[:operation].present?
       if params[:operation].downcase == 'credit'

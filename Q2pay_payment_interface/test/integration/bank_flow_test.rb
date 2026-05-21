@@ -6,11 +6,10 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     post '/users.json',
     params: user_details,
     headers: { }  
-    resp = json_response
-    assert_equal "Riya pawar", resp["full_name"]
-    assert_equal "ABHYUDAYA COOPERATIVE BANK LIMITED", resp["bank_name"]
-    assert_equal "MOBILE BANK", resp["branch_name"]
-    assert_equal "ABHY0065017", resp["ifsc_code"]
+    assert_equal "Riya pawar", json_response["full_name"]
+    assert_equal "ABHYUDAYA COOPERATIVE BANK LIMITED", json_response["bank_name"]
+    assert_equal "MOBILE BANK", json_response["branch_name"]
+    assert_equal "ABHY0065017", json_response["ifsc_code"]
     assert_response :created
   end
 
@@ -18,8 +17,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     post '/users.json',
     params: user_details.except(:aadhar_no).merge(aadhar_no: "667656565123"),
     headers: {}  
-    resp = json_response
-    assert_equal "Aadhar no Already registered", resp["errors"][0]
+    assert_equal "Aadhar no Already registered", json_response["errors"][0]
     assert_response :unprocessable_entity
   end
 
@@ -27,8 +25,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     post '/users.json', 
     params: user_details.except(:mobile_no).merge(mobile_no: 8934376311),
     headers: {}
-    resp = json_response
-    assert_equal "Mobile no Already registered", resp["errors"][0]
+    assert_equal "Mobile no Already registered", json_response["errors"][0]
     assert_response :unprocessable_entity
   end
 
@@ -36,8 +33,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     post '/users.json',
     params: user_details.except(:pan_no).merge(pan_no: "ECDPS2246Q"),
     headers: {}
-    resp = json_response
-    assert_equal "Pan no Already registered", resp["errors"][0]
+    assert_equal "Pan no Already registered", json_response["errors"][0]
     assert_response :unprocessable_entity
   end
 
@@ -45,8 +41,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     post '/users.json',
     params: user_details.except(:email_id).merge(email_id: "tina@gmail.com"),
     headers: {}
-    resp = json_response
-    assert_equal "Email Already registered", resp["errors"][0]
+    assert_equal "Email Already registered", json_response["errors"][0]
     assert_response :unprocessable_entity
    end
 
@@ -54,8 +49,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       post '/users.json',
        params: user_details.except(:password_confirmation).merge(password_confirmation: "tinaa1234"),
       headers: {}
-      resp = json_response
-      assert_equal "Password confirmation doesn't match Password", resp["errors"][0]
+      assert_equal "Password confirmation doesn't match Password", json_response["errors"][0]
       assert_response :unprocessable_entity
 
     end
@@ -65,8 +59,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       post '/users/login?email_id=tina@gmail.com&password=tina123',
        params: {  },
       headers: {}
-      resp = json_response
-      assert_equal "Login Successful", resp["message"]
+      assert_equal "Login Successful", json_response["message"]
       assert_response :ok
     end
 
@@ -74,8 +67,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       post '/users/login?email_id=tina@gmail.com&password=tinaa123',
       params: {  },
       headers: {}
-      resp = json_response
-      assert_equal "Invalid credentials", resp["errors"]
+      assert_equal "Invalid credentials", json_response["errors"]
       assert_response :unprocessable_entity
     end
     
@@ -83,8 +75,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     post '/users.json',
      params: user_details.except(:balance).merge(balance: 10),
     headers: {}
-    resp = json_response
-    assert_equal "Balance must be greater than 100 for saving account", resp["errors"][1]
+    assert_equal "Balance must be greater than 100 for saving account", json_response["errors"][1]
     assert_response :unprocessable_entity
   end
 
@@ -92,8 +83,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     post '/users.json',
     params: user_details.except(:acc_type, :balance).merge(acc_type: 'current', balance: 100),
     headers: {}
-    resp = json_response
-    assert_equal "Balance must be greater than 500 for current account", resp["errors"][1]
+    assert_equal "Balance must be greater than 500 for current account", json_response["errors"][1]
     assert_response :unprocessable_entity
   end
 
@@ -101,8 +91,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     post '/users.json',
     params: user_details.except(:acc_type).merge(acc_type: "loans"),
     headers: {}
-    resp = json_response
-    assert_equal 'Acc type is invalid', resp["errors"][1]
+    assert_equal 'Acc type is invalid', json_response["errors"][1]
     assert_response :unprocessable_entity
   end
 
@@ -110,11 +99,10 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     get '/users.json',
     params: {},
     headers: { Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal "Tina Patil" , resp[0]["full_name"]
-    assert_equal "667656565123", resp[0]["aadhar_no"]
-    assert_equal "SXDPS2246Q", resp[0]["pan_no"]
-    assert_equal 9034376311, resp[0]["mobile_no"]
+    assert_equal "Tina Patil" , json_response[0]["full_name"]
+    assert_equal "667656565123", json_response[0]["aadhar_no"]
+    assert_equal "SXDPS2246Q", json_response[0]["pan_no"]
+    assert_equal 9034376311, json_response[0]["mobile_no"]
     assert_response :ok
   end
 
@@ -122,11 +110,10 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     get '/users/8ff963df-b879-5b14-aff5-186c2e22cb35.json', 
     params: {}, 
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal "Rishi Patel", resp["full_name"]
-    assert_equal "557656565123", resp["aadhar_no"]
-    assert_equal "ECDPS2246Q", resp["pan_no"]
-    assert_equal 8934376311, resp["mobile_no"]
+    assert_equal "Rishi Patel", json_response["full_name"]
+    assert_equal "557656565123", json_response["aadhar_no"]
+    assert_equal "ECDPS2246Q", json_response["pan_no"]
+    assert_equal 8934376311, json_response["mobile_no"]
     assert_response :ok
   end
 
@@ -134,8 +121,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     get '/users/7ef963df-b879-5b14-aff5-186c2e22cb35.json', 
     params: {}, 
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'User not found', resp["errors"]
+    assert_equal 'User not found', json_response["errors"]
     assert_response :not_found
   end
 
@@ -145,11 +131,10 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       mobile_no: 7878786767
     },
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Tina Patil', resp["full_name"]
-    assert_equal '667656565123', resp["aadhar_no"]
-    assert_equal 'SXDPS2246Q', resp["pan_no"]
-    assert_equal 7878786767, resp["mobile_no"]
+    assert_equal 'Tina Patil', json_response["full_name"]
+    assert_equal '667656565123', json_response["aadhar_no"]
+    assert_equal 'SXDPS2246Q', json_response["pan_no"]
+    assert_equal 7878786767, json_response["mobile_no"]
     assert_response :ok
   end
 
@@ -159,8 +144,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
      email_id: "tinuu@gmail.com"
     },
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'User not found', resp['errors']
+    assert_equal 'User not found', json_response['errors']
     assert_response :not_found
   end
 
@@ -171,8 +155,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       mobile_no: 9034376311
     },
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Verified', resp['message']
+    assert_equal 'Verified', json_response['message']
     assert_response :ok
   end
 
@@ -183,8 +166,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       mobile_no: 9034376322
     },
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Invalid mobile number', resp['errors']
+    assert_equal 'Invalid mobile number', json_response['errors']
     assert_response :unprocessable_entity
   end
 
@@ -195,8 +177,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       mobile_no: 9034376322
     },
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Invalid aadhar number', resp['errors']
+    assert_equal 'Invalid aadhar number', json_response['errors']
     assert_response :unprocessable_entity
   end
 
@@ -206,19 +187,17 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     get "/accounts.json",
     params: {},
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Tina Patil', resp["name"]
-    assert_equal 45674567, resp["accounts_details"][0]["account_number"]
-    assert_equal 'saving', resp["accounts_details"][0]["account_type"]
-    assert_equal 3000, resp["accounts_details"][0]["balance"]
-    assert_equal 'ABHYUDAYA COOPERATIVE BANK LIMITED', resp["accounts_details"][0]["bank_name"]
-    assert_equal 'ABHY0065017', resp["accounts_details"][0]["ifsc_code"]
-     assert_equal 45664576, resp["accounts_details"][1]["account_number"]
-    assert_equal 'current', resp["accounts_details"][1]["account_type"]
-    assert_equal 1500, resp["accounts_details"][1]["balance"]
-    assert_equal 'ABHYUDAYA COOPERATIVE BANK LIMITED', resp["accounts_details"][1]["bank_name"]
-    assert_equal 'ABHY0065101', resp["accounts_details"][1]["ifsc_code"]
-
+    assert_equal 'Tina Patil', json_response["name"]
+    assert_equal 45674567, json_response["accounts_details"][0]["account_number"]
+    assert_equal 'saving', json_response["accounts_details"][0]["account_type"]
+    assert_equal 3000, json_response["accounts_details"][0]["balance"]
+    assert_equal 'ABHYUDAYA COOPERATIVE BANK LIMITED', json_response["accounts_details"][0]["bank_name"]
+    assert_equal 'ABHY0065017', json_response["accounts_details"][0]["ifsc_code"]
+     assert_equal 45664576, json_response["accounts_details"][1]["account_number"]
+    assert_equal 'current', json_response["accounts_details"][1]["account_type"]
+    assert_equal 1500, json_response["accounts_details"][1]["balance"]
+    assert_equal 'ABHYUDAYA COOPERATIVE BANK LIMITED', json_response["accounts_details"][1]["bank_name"]
+    assert_equal 'ABHY0065101', json_response["accounts_details"][1]["ifsc_code"]
     assert_response :ok
   end
 
@@ -227,16 +206,14 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     delete '/accounts/3.json', 
     params: {},
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Account deleted for id 3', resp ["message"]
+    assert_equal 'Account deleted for id 3', json_response["message"]
   end
     
   test 'should not delete users account if not present' do
     delete '/accounts/5.json', 
     params: {},
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Account doesnt exists', resp["errors"]
+    assert_equal 'Account doesnt exists', json_response["errors"]
     assert_response :unprocessable_entity
   end
 
@@ -248,8 +225,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     ifsc: "ABHY0065101"
     },
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal "Acc type with this user already exists ", resp["errors"][0]
+    assert_equal "Acc type with this user already exists ", json_response["errors"][0]
     assert_response :unprocessable_entity
   end
 
@@ -262,8 +238,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     ifsc: "ABHY0065101"
     },
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal "Account created for existing user", resp["message"]
+    assert_equal "Account created for existing user", json_response["message"]
     assert_response :ok
   end
   
@@ -277,8 +252,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       "receiver_accno": "45664576"
     }, 
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Transaction successful', resp["message"]
+    assert_equal 'Transaction successful', json_response["message"]
     assert_response :ok
     
   end
@@ -291,8 +265,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       "receiver_accno": "45664576"
     }, 
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Source account does not exist!', resp["errors"].first
+    assert_equal 'Source account does not exist!', json_response["errors"].first
     assert_response :unprocessable_entity
   end
 
@@ -304,8 +277,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       "receiver_accno": "12364576"
     }, 
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Destination account does not exist!', resp["errors"].first
+    assert_equal 'Destination account does not exist!', json_response["errors"].first
     assert_response :unprocessable_entity
   end
 
@@ -317,8 +289,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     "receiver_accno": "45664576"
     }, 
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'Not enough balance', resp["errors"].first
+    assert_equal 'Not enough balance', json_response["errors"].first
     assert_response :unprocessable_entity
   end
 
@@ -330,27 +301,70 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     "receiver_accno": "45674567"
     }, 
     headers: {Authorization: "Bearer #{user_token}"}
-    resp = json_response
-    assert_equal 'cannot transfer to same account', resp["errors"].first
+    assert_equal 'cannot transfer to same account', json_response["errors"].first
     assert_response :unprocessable_entity
   end
 
-  # test 'view all the transactions of LoggedIn user' do
-  #   get '/transactions.json',
-  #   params: {},
-  #   headers: {Authorization: "Bearer #{user_token}"}
-  #   resp = json_response
-  #   pp resp
-  #   pp resp[0]
-  #   assert_equal '{"source_account_number" => 45674567, "amount" => 100, "receiver_account_number" => 45664576}', resp[0]
-  #   assert_response :ok
-  # end
+  test 'view all the transactions of LoggedIn user' do
+    get '/transactions.json',
+    params: {},
+    headers: {Authorization: "Bearer #{user_token}"}
+    assert_equal({"source_account_number" => 45664576, "amount" => 100, "receiver_account_number" => 87974567}, json_response[0])
+    assert_equal({"source_account_number"=> 87974567, "amount"=> 150, "receiver_account_number"=> 45674567}, json_response[1])
+    assert_response :ok
+  end
+
+  test 'view transactions for only credit operation' do
+    get '/transactions.json',
+    params: {operation: 'CREDIT'},
+    headers: {Authorization: "Bearer #{user_token}"}
+    assert_equal({"source_account_number" => 87974567, "amount" => 150, "receiver_account_number" => 45674567}, json_response[0])
+    assert_equal({"source_account_number" => 87974567, "amount" => 200, "receiver_account_number" => 45664576}, json_response[1])
+    assert_equal({"source_account_number" => 45674567, "amount" => 250, "receiver_account_number" => 45664576}, json_response[2])
+    assert_response :ok
+  end
+
+  test 'view transactions for only debit operation' do
+    get '/transactions.json',
+    params: {operation: 'DEBIT'},
+    headers: {Authorization: "Bearer #{user_token}"}
+    assert_equal({"source_account_number" => 45664576, "amount" => 100, "receiver_account_number" => 87974567}, json_response[0])
+    assert_equal({"source_account_number" => 45674567, "amount" => 250, "receiver_account_number" => 45664576}, json_response[1])
+    assert_response :ok
+  end
   
+  test 'Should not view transactions if invalid operation' do
+    get '/transactions.json',
+    params: {operation: 'abcd'},
+    headers: {Authorization: "Bearer #{user_token}"}
+    assert_equal 'Invalid Operation', json_response['errors']
+    assert_response :unprocessable_entity
+  end
+
+  test 'Should view transactions by filtering minimum amount' do
+    get '/transactions.json',
+    params: {minimum: 150},
+    headers: {Authorization: "Bearer #{user_token}"}
+    assert_equal({"source_account_number" => 87974567, "amount" => 150, "receiver_account_number" => 45674567}, json_response[0])
+    assert_equal( {"source_account_number" => 87974567, "amount" => 200, "receiver_account_number" => 45664576}, json_response[1])
+    assert_equal( {"source_account_number" => 45674567, "amount" => 250, "receiver_account_number" => 45664576} ,json_response[2])
+    assert_response :ok
+  end
+
+    test 'Should view transactions by filtering maximum amount' do
+    get '/transactions.json',
+    params: {maximum: 150},
+    headers: {Authorization: "Bearer #{user_token}"}
+    assert_equal({"source_account_number" => 45664576, "amount" => 100, "receiver_account_number" => 87974567}, json_response[0])
+    assert_equal( {"source_account_number" => 87974567, "amount" => 150, "receiver_account_number" => 45674567}, json_response[1])
+    assert_response :ok
+  end
+
   def user_details
     {"aadhar_no": "445566778899",
     "pan_no": "VBDPS2246Q",
     "mobile_no": 8934376222,
-    "first_name": "Riya",
+    "first_name": "Riya",                       
     "last_name": "pawar",
     "email_id": "riya@gmail.com",
     "password": "riya123",
