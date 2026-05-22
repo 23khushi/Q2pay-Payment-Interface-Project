@@ -1,7 +1,6 @@
 class PaymentsController < ApplicationController
 
   def index
-    # @payments = current_user.payments
     begin
       @payments = Payment.fetch_index(fetch_params, current_user)
       render :index, status: :ok

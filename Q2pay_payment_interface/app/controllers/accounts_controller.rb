@@ -35,6 +35,4 @@ class AccountsController < ApplicationController
   def account_params
     params.permit(:acc_type, :balance)
   end
-
-
 end
