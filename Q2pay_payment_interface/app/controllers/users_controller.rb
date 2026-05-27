@@ -17,6 +17,7 @@ skip_before_action :authenticate_user, only: [:create, :login]
     account = @user.accounts.where(account_params).build(bank_id: @bank.id)
     if @user.save
       render :create , status: :created
+      UserMailer.welcome_email(@user).deliver_now
     else
       render json: {errors: @user.errors.full_messages + account.errors.full_messages}, status: :unprocessable_entity
     end

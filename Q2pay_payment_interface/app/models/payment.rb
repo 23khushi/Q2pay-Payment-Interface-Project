@@ -62,7 +62,6 @@ class Payment < ApplicationRecord
     if params[:operation].present?
       case params[:operation].downcase
       when 'credit'
-        pp current_user.id
         payments = payments.where(receiver_user_id: current_user.id)
       when 'debit'
         payments = payments.where(source_user_id: current_user.id)

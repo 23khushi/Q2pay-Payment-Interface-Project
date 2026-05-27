@@ -9,10 +9,6 @@ class PaymentsController < ApplicationController
     end
   end
 
-
-   
-
-
   def create
     @account = current_user.accounts
     begin
@@ -26,9 +22,9 @@ class PaymentsController < ApplicationController
       else 
         render json: {errors: "User Account does not exist"}, status: :unprocessable_entity
       end
-     rescue ActiveRecord::RecordInvalid => e
+    rescue ActiveRecord::RecordInvalid => e
       render json: {errors: e.message}, status: :unprocessable_entity
-    rescue
+    rescue => e
       render json: {errors: e.message}, status: :unprocessable_entity
     end
   end
