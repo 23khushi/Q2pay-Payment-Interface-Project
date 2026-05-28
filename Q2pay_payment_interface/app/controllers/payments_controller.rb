@@ -29,6 +29,9 @@ class PaymentsController < ApplicationController
     end
   end
 
+  
+
+
   private
   def payment_params
     params.permit(:source_accno, :amount,:receiver_accno)

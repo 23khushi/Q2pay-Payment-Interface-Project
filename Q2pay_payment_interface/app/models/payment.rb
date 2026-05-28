@@ -1,13 +1,13 @@
 class Payment < ApplicationRecord
-  belongs_to :source_user, class_name: 'User', foreign_key: 'source_user_id'
-  belongs_to :receiver_user, class_name: 'User', foreign_key: 'receiver_user_id'
+
+
   belongs_to :source_account, class_name: 'Account', foreign_key: 'source_acc_id'
   belongs_to :receiver_account, class_name: 'Account', foreign_key: 'receiver_acc_id'
 
 
   before_validation :amount_cant_be_negative
 
-  validates :source_user_id, :source_acc_id, :receiver_user_id,:receiver_acc_id, :amount, presence: true
+  validates  :source_acc_id,:receiver_acc_id, :amount, presence: true
   
   validates :amount, numericality: true
 
@@ -15,7 +15,7 @@ class Payment < ApplicationRecord
   def amount_cant_be_negative
     return errors.add(:amount, "Invalid ") if amount <= 0
   end
-  
+
 
   def transfer(data)
     destination_account = Account.find_by(acc_no: data[:receiver_accno])
@@ -40,17 +40,18 @@ class Payment < ApplicationRecord
     source_account.update!(balance: source_account[:balance] - data[:amount])
     destination_account.update!(balance: destination_account[:balance] + data[:amount])
     payment = Payment.create!(
-      source_user_id: source_account.user_id,
-      receiver_user_id: destination_account.user_id,
-      source_acc_id: source_account.id,
-      receiver_acc_id: destination_account.id,
+      source_acc_id: source_acc_id,
+      receiver_acc_id: receiver_acc_id,
       amount: data[:amount]
     )
     true
   end  
+
+  
   
   def self.fetch_index(params, current_user)
-    payments = Payment.where('source_user_id = ? OR receiver_user_id =?', current_user.id, current_user.id)
+    user_data = current_user.accounts
+    payments = Payment.where('source_acc_id IN (?) OR receiver_acc_id IN (?)', user_data.pluck(:id), user_data.pluck(:id))
     if params[:minimum].present?
       payments = payments.where('amount >= ?', params[:minimum])
     end
@@ -62,9 +63,9 @@ class Payment < ApplicationRecord
     if params[:operation].present?
       case params[:operation].downcase
       when 'credit'
-        payments = payments.where(receiver_user_id: current_user.id)
+        payments = payments.where(receiver_acc_id: user_data.pluck(:id))
       when 'debit'
-        payments = payments.where(source_user_id: current_user.id)
+        payments = payments.where(source_acc_id: user_data.pluck(:id))
       else
         raise "Invalid Operation"
       end
