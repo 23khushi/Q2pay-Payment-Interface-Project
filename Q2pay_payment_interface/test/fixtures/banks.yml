@@ -9,7 +9,7 @@ bank_one:
   branch:  "MOBILE BANK"
   city: "MUMBAI"
   state: "MAHARASHTRA"
-  # district: "GREATER MUMBAI"
+  district: "GREATER MUMBAI"
 
 
 bank_two:
@@ -21,4 +21,4 @@ bank_two:
   branch:  "PUNE SERVICE BRANCH"
   city: "PUNE"
   state: "MAHARASHTRA"
-  # district: "PUNE"
+  district: "PUNE"

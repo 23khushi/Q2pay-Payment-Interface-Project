@@ -9,12 +9,12 @@ class PaymentsController < ApplicationController
     end
   end
 
+  
   def create
     @account = current_user.accounts
     begin
-      if @account
-        @pay = Payment.new
-        if @pay.transfer(payment_params)
+      if @account    
+        if Payment.transfer(payment_params,current_user)
           render json: {message: "Transaction successful"} , status: :ok
         else
           render json: {errors: @pay.errors.full_messages }, status: :unprocessable_entity

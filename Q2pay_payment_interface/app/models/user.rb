@@ -20,5 +20,12 @@ class User < ApplicationRecord
 
     validates :email_id, presence: true, uniqueness: {message: "Already registered"}, format:{with: URI::MailTo::EMAIL_REGEXP, message: "Invalid mail id!"}
     
+    enum :role, {
+    user: "user",
+    super_admin: "super_admin",
+    admin: "admin"
+     }, default: "user", validate: true
 
+
+     
 end

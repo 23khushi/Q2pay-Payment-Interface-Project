@@ -2,10 +2,10 @@ class UsersController < ApplicationController
 before_action :set_params, only: [:show, :update]
 skip_before_action :authenticate_user, only: [:create, :login]
 
-  def index
-    @users = User.all
-    render 'index', status: :ok
-  end
+  # def index
+  #   @users = User.all
+  #   render 'index', status: :ok
+  # end
 
   def show
     render 'show', status: :ok
@@ -16,6 +16,7 @@ skip_before_action :authenticate_user, only: [:create, :login]
     @bank = Bank.find_by(bank_params)
     account = @user.accounts.where(account_params).build(bank_id: @bank.id)
     if @user.save
+      ActivityLog.create_log(current_user, "created", @user)
       render :create , status: :created
       UserMailer.welcome_email(@user).deliver_now
     else
@@ -57,6 +58,7 @@ skip_before_action :authenticate_user, only: [:create, :login]
 
   def update
     if current_user.update(user_params)
+      ActivityLog.create_log(current_user, "updated", current_user)
       render 'update' , status: :ok
     else
       render json: { errors: current_user.errors.full_messages}, status: :unprocessable_entity

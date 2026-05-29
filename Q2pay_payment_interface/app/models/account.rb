@@ -2,6 +2,7 @@ class Account < ApplicationRecord
   belongs_to :user
   belongs_to :bank
   has_many :payments
+  has_many :activitylogs, as: :loggable
   default_scope -> {where(deleted_at: nil)}
   require 'securerandom'
   

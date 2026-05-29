@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_22_045542) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_28_121011) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -26,6 +26,45 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_22_045542) do
     t.index ["acc_no"], name: "index_accounts_on_acc_no", unique: true
     t.index ["bank_id"], name: "index_accounts_on_bank_id"
     t.index ["user_id"], name: "index_accounts_on_user_id"
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "activity_logs", force: :cascade do |t|
+    t.string "action"
+    t.datetime "created_at", null: false
+    t.bigint "loggable_id", null: false
+    t.string "loggable_type", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["loggable_type", "loggable_id"], name: "index_activity_logs_on_loggable"
+    t.index ["user_id"], name: "index_activity_logs_on_user_id"
   end
 
   create_table "banks", force: :cascade do |t|
@@ -54,14 +93,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_22_045542) do
     t.bigint "amount"
     t.datetime "created_at", null: false
     t.bigint "receiver_acc_id", null: false
-    t.uuid "receiver_user_id", null: false
     t.bigint "source_acc_id", null: false
-    t.uuid "source_user_id", null: false
     t.datetime "updated_at", null: false
     t.index ["receiver_acc_id"], name: "index_payments_on_receiver_acc_id"
-    t.index ["receiver_user_id"], name: "index_payments_on_receiver_user_id"
     t.index ["source_acc_id"], name: "index_payments_on_source_acc_id"
-    t.index ["source_user_id"], name: "index_payments_on_source_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -73,6 +108,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_22_045542) do
     t.bigint "mobile_no", null: false
     t.string "pan_no", null: false
     t.string "password_digest"
+    t.string "role", default: "user"
     t.boolean "status"
     t.datetime "updated_at", null: false
     t.index ["aadhar_no"], name: "index_users_on_aadhar_no", unique: true
@@ -83,9 +119,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_22_045542) do
 
   add_foreign_key "accounts", "banks"
   add_foreign_key "accounts", "users"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "activity_logs", "users"
   add_foreign_key "otps", "users"
   add_foreign_key "payments", "accounts", column: "receiver_acc_id"
   add_foreign_key "payments", "accounts", column: "source_acc_id"
-  add_foreign_key "payments", "users", column: "receiver_user_id"
-  add_foreign_key "payments", "users", column: "source_user_id"
 end

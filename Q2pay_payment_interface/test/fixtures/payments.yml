@@ -5,28 +5,22 @@ one:
   amount: 100
   receiver_acc_id: 2
   source_acc_id: 3
-  source_user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
-  
 
 two:
   id: 2
   amount: 150
   receiver_acc_id: 1
   source_acc_id: 2
-  source_user_id: "8ff963df-b879-5b14-aff5-186c2e22cb35"
 
 three:
   id: 3
   amount: 200
   receiver_acc_id: 3
   source_acc_id: 2
-  source_user_id: "8ff963df-b879-5b14-aff5-186c2e22cb35"
   
 four:
   id: 4
   amount: 250
   receiver_acc_id: 3
   source_acc_id: 1
-  source_user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
-
 

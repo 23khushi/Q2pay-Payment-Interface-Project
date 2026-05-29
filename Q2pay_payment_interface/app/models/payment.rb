@@ -1,23 +1,19 @@
 class Payment < ApplicationRecord
-
-
   belongs_to :source_account, class_name: 'Account', foreign_key: 'source_acc_id'
   belongs_to :receiver_account, class_name: 'Account', foreign_key: 'receiver_acc_id'
-
-
+  has_many :activitylogs, as: :loggable
   before_validation :amount_cant_be_negative
+  attr_accessor :current_user
 
-  validates  :source_acc_id,:receiver_acc_id, :amount, presence: true
-  
-  validates :amount, numericality: true
 
+  validates :amount, numericality: true, presence: true
 
   def amount_cant_be_negative
     return errors.add(:amount, "Invalid ") if amount <= 0
   end
 
 
-  def transfer(data)
+  def self.transfer(data,current_user)
     destination_account = Account.find_by(acc_no: data[:receiver_accno])
     source_account = Account.find_by(acc_no: data[:source_accno])
     data[:amount] = data[:amount].to_i
@@ -39,15 +35,14 @@ class Payment < ApplicationRecord
     end
     source_account.update!(balance: source_account[:balance] - data[:amount])
     destination_account.update!(balance: destination_account[:balance] + data[:amount])
-    payment = Payment.create!(
-      source_acc_id: source_acc_id,
-      receiver_acc_id: receiver_acc_id,
+    @payment = Payment.create!(
+      source_acc_id: source_account.id,
+      receiver_acc_id: destination_account.id,
       amount: data[:amount]
-    )
+    ) 
     true
-  end  
-
-  
+    ActivityLog.create_log(current_user, "created", @payment) 
+  end    
   
   def self.fetch_index(params, current_user)
     user_data = current_user.accounts
