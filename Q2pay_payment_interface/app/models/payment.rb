@@ -1,9 +1,9 @@
 class Payment < ApplicationRecord
   belongs_to :source_account, class_name: 'Account', foreign_key: 'source_acc_id'
   belongs_to :receiver_account, class_name: 'Account', foreign_key: 'receiver_acc_id'
-  has_many :activitylogs, as: :loggable
+  has_many :activity_logs, as: :loggable
   before_validation :amount_cant_be_negative
-  attr_accessor :current_user
+
 
 
   validates :amount, numericality: true, presence: true

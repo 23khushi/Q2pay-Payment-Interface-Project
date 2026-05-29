@@ -24,9 +24,5 @@ Rails.application.routes.draw do
   #get transactions
   get '/transactions', to: 'payments#index'
 
-  #get Activity logs
 
-  # get '/activity_logs', to: 'activitylogs#index'
-
-    resources :activity_logs
 end

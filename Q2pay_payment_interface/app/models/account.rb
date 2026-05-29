@@ -2,11 +2,11 @@ class Account < ApplicationRecord
   belongs_to :user
   belongs_to :bank
   has_many :payments
-  has_many :activitylogs, as: :loggable
+  has_many :activity_logs, as: :loggable
   default_scope -> {where(deleted_at: nil)}
   require 'securerandom'
   
-  # before_validation :acctype_to_downcase
+  before_validation :acctype_to_downcase
 
   before_validation :balance_accordingto_acctype
 
