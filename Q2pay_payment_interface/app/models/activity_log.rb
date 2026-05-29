@@ -11,5 +11,4 @@ def self.create_log(current_user, action, loggable)
   )
 
 end
-
 end

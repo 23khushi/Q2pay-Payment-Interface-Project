@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
  before_action :authenticate_user
-  
+
   def current_user
    @current_user
   end
@@ -20,5 +20,4 @@ class ApplicationController < ActionController::API
       render json: {errors: 'Token expired'}, status: :unprocessable_entity
     end
   end
-
 end

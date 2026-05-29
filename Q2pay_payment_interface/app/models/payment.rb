@@ -46,7 +46,12 @@ class Payment < ApplicationRecord
   
   def self.fetch_index(params, current_user)
     user_data = current_user.accounts
+    pp  params
+    pp "hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"
     payments = Payment.where('source_acc_id IN (?) OR receiver_acc_id IN (?)', user_data.pluck(:id), user_data.pluck(:id))
+    pp "hghgh"
+    pp params[:minimum]
+    pp "hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"
     if params[:minimum].present?
       payments = payments.where('amount >= ?', params[:minimum])
     end
@@ -62,7 +67,7 @@ class Payment < ApplicationRecord
       when 'debit'
         payments = payments.where(source_acc_id: user_data.pluck(:id))
       else
-        raise "Invalid Operation"
+        # raise "Invalid Operation"
       end
     end
     payments   
