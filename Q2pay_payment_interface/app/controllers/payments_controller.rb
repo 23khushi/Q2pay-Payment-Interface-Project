@@ -1,12 +1,8 @@
 class PaymentsController < ApplicationController
 
   def index
-    begin
-      @payments = Payment.fetch_index(fetch_params, current_user)
-      render :index, status: :ok
-    rescue => e 
-      render json: {errors: e.message}, status: :unprocessable_entity
-    end
+    @payments = Payment.fetch_index(fetch_params, current_user)
+    render :index, status: :ok
   end
 
   

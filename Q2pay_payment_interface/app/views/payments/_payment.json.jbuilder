@@ -1,4 +1,4 @@
-#  json.extract! payment
+ 
  json.id payment.id
  json.source_account_number payment.source_account.acc_no
  json.amount payment.amount
@@ -13,7 +13,6 @@ json.activity_logs payment.activity_logs do |log|
    json.created_at log.created_at
 end
 
-#  payments.each do |p|
 
 
 
