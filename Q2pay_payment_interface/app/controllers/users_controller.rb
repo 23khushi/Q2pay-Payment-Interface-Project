@@ -16,7 +16,6 @@ skip_before_action :authenticate_user, only: [:create, :login]
     @bank = Bank.find_by(bank_params)
     account = @user.accounts.where(account_params).build(bank_id: @bank.id)
     if @user.save
-      ActivityLog.create_log(current_user, "created", @user)
       render :create , status: :created
       UserMailer.welcome_email(@user).deliver_now
     else

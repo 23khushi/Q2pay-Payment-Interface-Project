@@ -14,7 +14,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_28_121011) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "accounts", force: :cascade do |t|
+  create_table "accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.bigint "acc_no"
     t.string "acc_type"
     t.bigint "balance"
@@ -59,7 +59,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_28_121011) do
   create_table "activity_logs", force: :cascade do |t|
     t.string "action"
     t.datetime "created_at", null: false
-    t.bigint "loggable_id", null: false
+    t.uuid "loggable_id", null: false
     t.string "loggable_type", null: false
     t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
@@ -89,11 +89,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_28_121011) do
     t.index ["user_id"], name: "index_otps_on_user_id"
   end
 
-  create_table "payments", force: :cascade do |t|
+  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.bigint "amount"
     t.datetime "created_at", null: false
-    t.bigint "receiver_acc_id", null: false
-    t.bigint "source_acc_id", null: false
+    t.uuid "receiver_acc_id", null: false
+    t.uuid "source_acc_id", null: false
     t.datetime "updated_at", null: false
     t.index ["receiver_acc_id"], name: "index_payments_on_receiver_acc_id"
     t.index ["source_acc_id"], name: "index_payments_on_source_acc_id"
