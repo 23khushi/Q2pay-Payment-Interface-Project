@@ -1,7 +1,11 @@
 class PaymentsController < ApplicationController
 
   def index
-    @payments = Payment.fetch_index(fetch_params, current_user)
+    if current_user.role == 'admin' || current_user.role == 'super_admin'
+      @payments = Payment.all
+    else
+      @payments = Payment.fetch_index(fetch_params, current_user)
+    end
     render :index, status: :ok
   end
 

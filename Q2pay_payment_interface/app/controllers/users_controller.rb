@@ -1,11 +1,15 @@
 class UsersController < ApplicationController
 before_action :set_params, only: [:show, :update]
 skip_before_action :authenticate_user, only: [:create, :login]
+skip_before_action :authorize, only: [:login]
 
-  # def index
-  #   @users = User.all
-  #   render 'index', status: :ok
-  # end
+  def index
+    if current_user.role == 'admin' || current_user.role == 'super_admin'
+      @users = User.all
+    end
+    render 'index', status: :ok
+  end
+
 
   def show
     render 'show', status: :ok

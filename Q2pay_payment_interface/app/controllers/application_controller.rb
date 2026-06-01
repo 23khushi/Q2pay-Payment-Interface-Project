@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
  before_action :authenticate_user
-
+ before_action :authorize
   def current_user
    @current_user
   end
@@ -18,6 +18,13 @@ class ApplicationController < ActionController::API
       end
     rescue
       render json: {errors: 'Token expired'}, status: :unprocessable_entity
+    end
+  end
+
+  def authorize
+    service =  AuthorizeUser.new(self, action_name)
+    unless service.allowed?
+      render json: {errors: "You are not authorized to perform this action"}, status: :forbidden
     end
   end
 end

@@ -1,7 +1,12 @@
 class AccountsController < ApplicationController
  
   def index
-    @user_accounts = current_user
+    if current_user.role == 'admin' || current_user.role == 'super_admin'
+      @accounts = Account.all
+    else
+      @accounts = current_user.accounts
+      pp @accounts
+    end
     render 'index', status: :ok
   end
 
