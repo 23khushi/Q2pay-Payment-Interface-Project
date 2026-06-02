@@ -16,3 +16,34 @@ two:
   loggable_type: Account
   created_at: 2026-06-02 06:17:05.643
 
+three:
+  id: 3
+  user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
+  action: "created"
+  loggable_id: "f808b133-5769-466b-b406-6fe6bf88674d"
+  loggable_type: Payment
+  created_at: 2026-06-01 04:17:05.643
+
+four:
+  id: 4
+  user_id: "8ff963df-b879-5b14-aff5-186c2e22cb35"
+  action: "created"
+  loggable_id: "74c55d7a-c09e-41c8-a03e-a2dadbc75d46"
+  loggable_type: Payment
+  created_at: 2026-06-02 03:07:05.643
+
+five:
+  id: 5
+  user_id: "8ff963df-b879-5b14-aff5-186c2e22cb35"
+  action: "created"
+  loggable_id: 81f9074d-6950-45bd-8427-5bd4b017f0dd
+  loggable_type: Payment
+  created_at: 2026-06-02 02:17:05.643
+
+six:
+  id: 6
+  user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
+  action: "created"
+  loggable_id: "b2f8e592-6950-45b7-829e-eba0ed1eb2a7"
+  loggable_type: Payment
+  created_at: 2026-06-01 05:17:05.643

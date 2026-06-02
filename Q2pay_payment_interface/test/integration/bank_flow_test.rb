@@ -222,14 +222,14 @@ class BankFlowTest < ActionDispatch::IntegrationTest
 
 
   test 'delete logged in user account using account id' do
-    delete '/accounts/3.json', 
+    delete '/accounts/979c4acf-1c38-48d1-b158-4feb6ed353aa.json', 
     params: {},
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal 'Account deleted for id 3', json_response["message"]
+    assert_equal 'Account deleted for id 979c4acf-1c38-48d1-b158-4feb6ed353aa', json_response["message"]
   end
     
   test 'should not delete users account if not present' do
-    delete '/accounts/5.json', 
+    delete '/accounts/888c4acf-1c38-48d1-b158-4feb6ed353bb.json', 
     params: {},
     headers: {Authorization: "Bearer #{user_token}"}
     assert_equal 'Account doesnt exists', json_response["errors"]
@@ -284,7 +284,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       "receiver_accno": "45664576"
     }, 
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal 'Source account does not exist!', json_response["errors"].first
+    assert_equal 'Source account does not exist!', json_response["errors"]
     assert_response :unprocessable_entity
   end
 
@@ -296,7 +296,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
       "receiver_accno": "12364576"
     }, 
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal 'Destination account does not exist!', json_response["errors"].first
+    assert_equal 'Destination account does not exist!', json_response["errors"]
     assert_response :unprocessable_entity
   end
 
@@ -308,7 +308,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     "receiver_accno": "45664576"
     }, 
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal 'Not enough balance', json_response["errors"].first
+    assert_equal 'Not enough balance', json_response["errors"]
     assert_response :unprocessable_entity
   end
 
@@ -320,7 +320,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     "receiver_accno": "45674567"
     }, 
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal 'cannot transfer to same account', json_response["errors"].first
+    assert_equal 'cannot transfer to same account', json_response["errors"]
     assert_response :unprocessable_entity
   end
 
@@ -328,8 +328,41 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     get '/transactions.json',
     params: {},
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal({"source_account_number" => 45664576, "amount" => 100, "receiver_account_number" => 87974567}, json_response[0])
-    assert_equal({"source_account_number"=> 87974567, "amount"=> 150, "receiver_account_number"=> 45674567}, json_response[1])
+
+    assert_equal 4, json_response["Total_Transactions"]
+
+    assert_equal "f808b133-5769-466b-b406-6fe6bf88674d", json_response["Transactions"].first["id"]
+    assert_equal 45664576, json_response["Transactions"].first["source_account_number"]
+    assert_equal 100, json_response["Transactions"].first["amount"]
+    assert_equal "debit", json_response["Transactions"].first["operation"]
+    assert_equal 87974567, json_response["Transactions"].first["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].first["activity_logs"].first["action"]
+    assert_equal "2026-06-01T04:17:05.643Z", json_response["Transactions"].first["activity_logs"].first["created_at"]
+    
+    assert_equal "74c55d7a-c09e-41c8-a03e-a2dadbc75d46", json_response["Transactions"].second["id"]
+    assert_equal 87974567, json_response["Transactions"].second["source_account_number"]
+    assert_equal 150, json_response["Transactions"].second["amount"]
+    assert_equal "credit", json_response["Transactions"].second["operation"]
+    assert_equal 45674567, json_response["Transactions"].second["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].second["activity_logs"].first["action"]
+    assert_equal "2026-06-02T03:07:05.643Z", json_response["Transactions"].second["activity_logs"].first["created_at"]
+
+    assert_equal "81f9074d-6950-45bd-8427-5bd4b017f0dd", json_response["Transactions"].third["id"]
+    assert_equal 87974567, json_response["Transactions"].third["source_account_number"]
+    assert_equal 200, json_response["Transactions"].third["amount"]
+    assert_equal "credit", json_response["Transactions"].third["operation"]
+    assert_equal 45664576, json_response["Transactions"].third["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].third["activity_logs"].first["action"]
+    assert_equal "2026-06-02T02:17:05.643Z", json_response["Transactions"].third["activity_logs"].first["created_at"]
+
+    assert_equal "b2f8e592-6950-45b7-829e-eba0ed1eb2a7", json_response["Transactions"].fourth["id"]
+    assert_equal 45674567, json_response["Transactions"].fourth["source_account_number"]
+    assert_equal 250, json_response["Transactions"].fourth["amount"]
+    assert_equal "credit", json_response["Transactions"].fourth["operation"]
+    assert_equal 45664576, json_response["Transactions"].fourth["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].fourth["activity_logs"].first["action"]
+    assert_equal "2026-06-01T05:17:05.643Z", json_response["Transactions"].fourth["activity_logs"].first["created_at"]
+
     assert_response :ok
   end
 
@@ -337,9 +370,31 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     get '/transactions.json',
     params: {operation: 'CREDIT'},
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal({"source_account_number" => 87974567, "amount" => 150, "receiver_account_number" => 45674567}, json_response[0])
-    assert_equal({"source_account_number" => 87974567, "amount" => 200, "receiver_account_number" => 45664576}, json_response[1])
-    assert_equal({"source_account_number" => 45674567, "amount" => 250, "receiver_account_number" => 45664576}, json_response[2])
+    assert_equal 3, json_response["Total_Transactions"]
+
+    assert_equal "74c55d7a-c09e-41c8-a03e-a2dadbc75d46", json_response["Transactions"].first["id"]
+    assert_equal 87974567, json_response["Transactions"].first["source_account_number"]
+    assert_equal 150, json_response["Transactions"].first["amount"]
+    assert_equal "credit", json_response["Transactions"].first["operation"]
+    assert_equal 45674567, json_response["Transactions"].first["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].first["activity_logs"].first["action"]
+    assert_equal "2026-06-02T03:07:05.643Z", json_response["Transactions"].first["activity_logs"].first["created_at"]
+
+    assert_equal "81f9074d-6950-45bd-8427-5bd4b017f0dd", json_response["Transactions"].second["id"]
+    assert_equal 87974567, json_response["Transactions"].second["source_account_number"]
+    assert_equal 200, json_response["Transactions"].second["amount"]
+    assert_equal "credit", json_response["Transactions"].second["operation"]
+    assert_equal 45664576, json_response["Transactions"].second["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].second["activity_logs"].first["action"]
+    assert_equal "2026-06-02T02:17:05.643Z", json_response["Transactions"].second["activity_logs"].first["created_at"]
+
+    assert_equal "b2f8e592-6950-45b7-829e-eba0ed1eb2a7", json_response["Transactions"].third["id"]
+    assert_equal 45674567, json_response["Transactions"].third["source_account_number"]
+    assert_equal 250, json_response["Transactions"].third["amount"]
+    assert_equal "credit", json_response["Transactions"].third["operation"]
+    assert_equal 45664576, json_response["Transactions"].third["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].third["activity_logs"].first["action"]
+    assert_equal "2026-06-01T05:17:05.643Z", json_response["Transactions"].third["activity_logs"].first["created_at"]
     assert_response :ok
   end
 
@@ -347,8 +402,25 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     get '/transactions.json',
     params: {operation: 'DEBIT'},
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal({"source_account_number" => 45664576, "amount" => 100, "receiver_account_number" => 87974567}, json_response[0])
-    assert_equal({"source_account_number" => 45674567, "amount" => 250, "receiver_account_number" => 45664576}, json_response[1])
+
+    assert_equal 2, json_response["Total_Transactions"]
+
+    assert_equal "f808b133-5769-466b-b406-6fe6bf88674d", json_response["Transactions"].first["id"]
+    assert_equal 45664576, json_response["Transactions"].first["source_account_number"]
+    assert_equal 100, json_response["Transactions"].first["amount"]
+    assert_equal "debit", json_response["Transactions"].first["operation"]
+    assert_equal 87974567, json_response["Transactions"].first["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].first["activity_logs"].first["action"]
+    assert_equal "2026-06-01T04:17:05.643Z", json_response["Transactions"].first["activity_logs"].first["created_at"]
+
+    assert_equal "b2f8e592-6950-45b7-829e-eba0ed1eb2a7", json_response["Transactions"].second["id"]
+    assert_equal 45674567, json_response["Transactions"].second["source_account_number"]
+    assert_equal 250, json_response["Transactions"].second["amount"]
+    assert_equal "credit", json_response["Transactions"].second["operation"]
+    assert_equal 45664576, json_response["Transactions"].second["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].second["activity_logs"].first["action"]
+    assert_equal "2026-06-01T05:17:05.643Z", json_response["Transactions"].second["activity_logs"].first["created_at"]
+
     assert_response :ok
   end
   
@@ -356,26 +428,66 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     get '/transactions.json',
     params: {operation: 'abcd'},
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal 'Invalid Operation', json_response['errors']
-    assert_response :unprocessable_entity
+    assert_equal 0, json_response['Total_Transactions']
+    assert_response :ok
   end
 
   test 'Should view transactions by filtering minimum amount' do
     get '/transactions.json',
     params: {minimum: 150},
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal({"source_account_number" => 87974567, "amount" => 150, "receiver_account_number" => 45674567}, json_response[0])
-    assert_equal( {"source_account_number" => 87974567, "amount" => 200, "receiver_account_number" => 45664576}, json_response[1])
-    assert_equal( {"source_account_number" => 45674567, "amount" => 250, "receiver_account_number" => 45664576} ,json_response[2])
+    assert_equal 3, json_response['Total_Transactions']
+    
+    assert_equal "74c55d7a-c09e-41c8-a03e-a2dadbc75d46", json_response["Transactions"].first["id"]
+    assert_equal 87974567, json_response["Transactions"].first["source_account_number"]
+    assert_equal 150, json_response["Transactions"].first["amount"]
+    assert_equal "credit", json_response["Transactions"].first["operation"]
+    assert_equal 45674567, json_response["Transactions"].first["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].first["activity_logs"].first["action"]
+    assert_equal "2026-06-02T03:07:05.643Z", json_response["Transactions"].first["activity_logs"].first["created_at"]
+
+    assert_equal "81f9074d-6950-45bd-8427-5bd4b017f0dd", json_response["Transactions"].second["id"]
+    assert_equal 87974567, json_response["Transactions"].second["source_account_number"]
+    assert_equal 200, json_response["Transactions"].second["amount"]
+    assert_equal "credit", json_response["Transactions"].second["operation"]
+    assert_equal 45664576, json_response["Transactions"].second["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].second["activity_logs"].first["action"]
+    assert_equal "2026-06-02T02:17:05.643Z", json_response["Transactions"].second["activity_logs"].first["created_at"]
+
+    assert_equal "b2f8e592-6950-45b7-829e-eba0ed1eb2a7", json_response["Transactions"].third["id"]
+    assert_equal 45674567, json_response["Transactions"].third["source_account_number"]
+    assert_equal 250, json_response["Transactions"].third["amount"]
+    assert_equal "credit", json_response["Transactions"].third["operation"]
+    assert_equal 45664576, json_response["Transactions"].third["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].third["activity_logs"].first["action"]
+    assert_equal "2026-06-01T05:17:05.643Z", json_response["Transactions"].third["activity_logs"].first["created_at"]
+    
     assert_response :ok
+  
   end
 
     test 'Should view transactions by filtering maximum amount' do
     get '/transactions.json',
     params: {maximum: 150},
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal({"source_account_number" => 45664576, "amount" => 100, "receiver_account_number" => 87974567}, json_response[0])
-    assert_equal( {"source_account_number" => 87974567, "amount" => 150, "receiver_account_number" => 45674567}, json_response[1])
+    assert_equal 2, json_response['Total_Transactions']
+  
+    assert_equal "f808b133-5769-466b-b406-6fe6bf88674d", json_response["Transactions"].first["id"]
+    assert_equal 45664576, json_response["Transactions"].first["source_account_number"]
+    assert_equal 100, json_response["Transactions"].first["amount"]
+    assert_equal "debit", json_response["Transactions"].first["operation"]
+    assert_equal 87974567, json_response["Transactions"].first["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].first["activity_logs"].first["action"]
+    assert_equal "2026-06-01T04:17:05.643Z", json_response["Transactions"].first["activity_logs"].first["created_at"]
+    
+    assert_equal "74c55d7a-c09e-41c8-a03e-a2dadbc75d46", json_response["Transactions"].second["id"]
+    assert_equal 87974567, json_response["Transactions"].second["source_account_number"]
+    assert_equal 150, json_response["Transactions"].second["amount"]
+    assert_equal "credit", json_response["Transactions"].second["operation"]
+    assert_equal 45674567, json_response["Transactions"].second["receiver_account_number"]
+    assert_equal "created", json_response["Transactions"].second["activity_logs"].first["action"]
+    assert_equal "2026-06-02T03:07:05.643Z", json_response["Transactions"].second["activity_logs"].first["created_at"]
+
     assert_response :ok
   end
 

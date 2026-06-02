@@ -16,19 +16,19 @@ class Payment < ApplicationRecord
     source_account = Account.find_by(acc_no: data[:source_accno])
     data[:amount] = data[:amount].to_i
     unless destination_account.present? 
-      errors.add(:base, "Destination account does not exist!") 
+      raise("Destination account does not exist!") 
       return 
     end
     unless source_account.present? 
-      errors.add(:base, "Source account does not exist!") 
+      raise("Source account does not exist!") 
       return 
     end
     if source_account.id == destination_account.id
-      errors.add(:base, "cannot transfer to same account")  
+      raise("cannot transfer to same account")  
       return 
     end
     if data[:amount] > source_account.balance 
-      errors.add(:base,  "Not enough balance")
+      raise("Not enough balance")
       return 
     end
     source_account.update!(balance: source_account[:balance] - data[:amount])
