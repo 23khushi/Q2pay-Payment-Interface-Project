@@ -60,11 +60,11 @@ skip_before_action :authorize, only: [:login]
   end
 
   def update
-    if current_user.update(user_params)
-      ActivityLog.create_log(current_user, "updated", current_user)
+    if @user.update(user_params)
+      ActivityLog.create_log(@user, "updated", @user)
       render 'update' , status: :ok
     else
-      render json: { errors: current_user.errors.full_messages}, status: :unprocessable_entity
+      render json: { errors: @user.errors.full_messages}, status: :unprocessable_entity
     end
   end    
  
@@ -83,7 +83,11 @@ skip_before_action :authorize, only: [:login]
   end
 
   def set_params
-    @user =  User.find_by(id: params[:id])
+    if current_user.role == 'admin' || current_user.role == 'super_admin'
+      @user =  User.find_by(id: params[:id])
+    else
+      @user = current_user
+    end
     unless @user.present?
       render json: {errors: "User not found" }, status: :not_found
     end

@@ -3,9 +3,7 @@ class Payment < ApplicationRecord
   belongs_to :receiver_account, class_name: 'Account', foreign_key: 'receiver_acc_id'
   has_many :activity_logs, as: :loggable
   before_validation :amount_cant_be_negative
-
-
-
+  
   validates :amount, numericality: true, presence: true
 
   def amount_cant_be_negative
