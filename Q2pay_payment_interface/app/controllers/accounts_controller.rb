@@ -28,7 +28,11 @@ class AccountsController < ApplicationController
   end
 
   def destroy
-    @account = current_user.accounts.find_by(id: params[:id])
+    if current_user.role == 'admin' || current_user.role == 'super_admin'
+      @account = Account.find_by(id: params[:id])
+    else
+      @account = current_user.accounts.find_by(id: params[:id])
+    end
     if @account
       @account.softdelete
       ActivityLog.create_log(current_user, "deleted", @account)
