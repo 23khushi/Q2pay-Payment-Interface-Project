@@ -8,7 +8,7 @@ class AuthorizeUser
       "accounts"=> :all
     }, 
     "user"=>{
-      "users"=> [:update, :show, :create],
+      "users"=> [:update, :show, :create, :verify_aadhar],
       "payments"=> [:create, :index], 
       "accounts"=> :all
     }

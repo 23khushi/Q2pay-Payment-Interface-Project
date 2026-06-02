@@ -27,7 +27,6 @@ class Account < ApplicationRecord
 
   private
   def acctype_to_downcase
-    pp acc_type
     self.acc_type = acc_type.downcase
   end
 

@@ -1,26 +1,26 @@
 # # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  id: 1
+  id: "f808b133-5769-466b-b406-6fe6bf88674d"
   amount: 100
-  receiver_acc_id: 2
-  source_acc_id: 3
+  receiver_acc_id: "fde56b4d-81a0-4cf0-9646-075ace8dad1c"
+  source_acc_id: "979c4acf-1c38-48d1-b158-4feb6ed353aa"
 
 two:
-  id: 2
+  id: "74c55d7a-c09e-41c8-a03e-a2dadbc75d46"
   amount: 150
-  receiver_acc_id: 1
-  source_acc_id: 2
+  receiver_acc_id: "986155ea-2129-44de-9aae-77de883a5ff2"
+  source_acc_id: "fde56b4d-81a0-4cf0-9646-075ace8dad1c"
 
 three:
-  id: 3
+  id: "81f9074d-6950-45bd-8427-5bd4b017f0dd"
   amount: 200
-  receiver_acc_id: 3
-  source_acc_id: 2
+  receiver_acc_id: "979c4acf-1c38-48d1-b158-4feb6ed353aa"
+  source_acc_id: "fde56b4d-81a0-4cf0-9646-075ace8dad1c"
   
 four:
-  id: 4
+  id: "b2f8e592-6950-45b7-829e-eba0ed1eb2a7"
   amount: 250
-  receiver_acc_id: 3
-  source_acc_id: 1
+  receiver_acc_id: "979c4acf-1c38-48d1-b158-4feb6ed353aa"
+  source_acc_id: "986155ea-2129-44de-9aae-77de883a5ff2"
 

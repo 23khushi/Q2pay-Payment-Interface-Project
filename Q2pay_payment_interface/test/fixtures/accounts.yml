@@ -1,7 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 tina_saving:
-  id: 1
+  id: "986155ea-2129-44de-9aae-77de883a5ff2"
   acc_no: 45674567
   acc_type: "saving"
   balance: 3000
@@ -9,7 +9,7 @@ tina_saving:
   bank_id: 1
 
 rishi:
-  id: 2
+  id:  "fde56b4d-81a0-4cf0-9646-075ace8dad1c"
   acc_no: 87974567
   acc_type: "current"
   balance: 2000
@@ -18,7 +18,7 @@ rishi:
 
 
 tina_current:
-  id: 3
+  id: "979c4acf-1c38-48d1-b158-4feb6ed353aa"
   acc_no: 45664576
   acc_type: "current"
   balance: 1500

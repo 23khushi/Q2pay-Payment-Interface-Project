@@ -1,13 +1,18 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user: one
-  action: MyString
-  loggable: one
-  loggable_type: Loggable
+  id: 1
+  user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
+  action: "created"
+  loggable_id: "986155ea-2129-44de-9aae-77de883a5ff2"
+  loggable_type: Account
+  created_at: 2026-06-02 05:18:05.643
 
 two:
-  user: two
-  action: MyString
-  loggable: two
-  loggable_type: Loggable
+  id: 2
+  user_id: "e25ac701-1b69-4d84-b596-956ba3951f18"
+  action: "created"
+  loggable_id: "979c4acf-1c38-48d1-b158-4feb6ed353aa"
+  loggable_type: Account
+  created_at: 2026-06-02 06:17:05.643
+

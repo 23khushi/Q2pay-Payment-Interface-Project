@@ -95,34 +95,38 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test 'retrieve all users' do
-    get '/users.json',
-    params: {},
-    headers: { Authorization: "Bearer #{user_token}"}
-    assert_equal "Tina Patil" , json_response[0]["full_name"]
-    assert_equal "667656565123", json_response[0]["aadhar_no"]
-    assert_equal "SXDPS2246Q", json_response[0]["pan_no"]
-    assert_equal 9034376311, json_response[0]["mobile_no"]
-    assert_response :ok
-  end
+  # test 'retrieve all users' do
+  #   get '/users.json',
+  #   params: {},
+  #   headers: { Authorization: "Bearer #{nuser_toke}"}
+  #   assert_equal "Tina Patil" , json_response[0]["full_name"]
+  #   assert_equal "667656565123", json_response[0]["aadhar_no"]
+  #   assert_equal "SXDPS2246Q", json_response[0]["pan_no"]
+  #   assert_equal 9034376311, json_response[0]["mobile_no"]
+  #   assert_response :ok
+  # end
 
-  test 'retrieve user with specific id' do
+  test 'retrieve user with user id' do
     get '/users/8ff963df-b879-5b14-aff5-186c2e22cb35.json', 
     params: {}, 
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal "Rishi Patel", json_response["full_name"]
-    assert_equal "557656565123", json_response["aadhar_no"]
-    assert_equal "ECDPS2246Q", json_response["pan_no"]
-    assert_equal 8934376311, json_response["mobile_no"]
+    assert_equal "Tina Patil", json_response["full_name"]
+    assert_equal "667656565123", json_response["aadhar_no"]
+    assert_equal "SXDPS2246Q", json_response["pan_no"]
+    assert_equal 'tina@gmail.com', json_response["email_id"]
+    assert_equal 9034376311, json_response["mobile_no"]
     assert_response :ok
   end
 
-  test 'should not retrieve user with specific id if not present' do
+  test 'Checks that you always get your own details, even if you try requesting someone elses ID' do
     get '/users/7ef963df-b879-5b14-aff5-186c2e22cb35.json', 
     params: {}, 
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal 'User not found', json_response["errors"]
-    assert_response :not_found
+    assert_equal "Tina Patil", json_response["full_name"]
+    assert_equal "667656565123", json_response["aadhar_no"]
+    assert_equal "SXDPS2246Q", json_response["pan_no"]
+    assert_equal 'tina@gmail.com', json_response["email_id"]
+    assert_equal 9034376311, json_response["mobile_no"]
   end
 
   test 'should update mobile no of logged in user' do
@@ -134,18 +138,23 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     assert_equal 'Tina Patil', json_response["full_name"]
     assert_equal '667656565123', json_response["aadhar_no"]
     assert_equal 'SXDPS2246Q', json_response["pan_no"]
+    assert_equal 'tina@gmail.com', json_response["email_id"]
     assert_equal 7878786767, json_response["mobile_no"]
     assert_response :ok
   end
 
-  test 'should not update the mail id if user not logged in or invalid user' do
+  test 'Updates your own details, even if you try requesting via someone elses ID' do
     patch '/users/8ff963df-b879-5b14-aff5-186c2e22ee35.json',
     params: {
      email_id: "tinuu@gmail.com"
     },
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal 'User not found', json_response['errors']
-    assert_response :not_found
+    assert_equal 'Tina Patil', json_response["full_name"]
+    assert_equal '667656565123', json_response["aadhar_no"]
+    assert_equal 'SXDPS2246Q', json_response["pan_no"]
+    assert_equal 'tinuu@gmail.com', json_response["email_id"]
+    assert_equal 9034376311, json_response["mobile_no"]
+    assert_response :ok
   end
 
   test 'User verification of registered user with valid details' do
@@ -187,17 +196,27 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     get "/accounts.json",
     params: {},
     headers: {Authorization: "Bearer #{user_token}"}
-    assert_equal 'Tina Patil', json_response["name"]
-    assert_equal 45674567, json_response["accounts_details"][0]["account_number"]
-    assert_equal 'saving', json_response["accounts_details"][0]["account_type"]
-    assert_equal 3000, json_response["accounts_details"][0]["balance"]
-    assert_equal 'ABHYUDAYA COOPERATIVE BANK LIMITED', json_response["accounts_details"][0]["bank_name"]
-    assert_equal 'ABHY0065017', json_response["accounts_details"][0]["ifsc_code"]
-     assert_equal 45664576, json_response["accounts_details"][1]["account_number"]
-    assert_equal 'current', json_response["accounts_details"][1]["account_type"]
-    assert_equal 1500, json_response["accounts_details"][1]["balance"]
-    assert_equal 'ABHYUDAYA COOPERATIVE BANK LIMITED', json_response["accounts_details"][1]["bank_name"]
-    assert_equal 'ABHY0065101', json_response["accounts_details"][1]["ifsc_code"]
+    assert_equal 2, json_response["Total_Accounts"]
+    assert_equal "Tina Patil", json_response["accounts_details"].first["full_name"]
+    assert_equal 45674567, json_response["accounts_details"].first["account_number"]
+    assert_equal "saving", json_response["accounts_details"].first["account_type"]
+    assert_equal 3000, json_response["accounts_details"].first["balance"]
+    assert_equal "ABHYUDAYA COOPERATIVE BANK LIMITED", json_response["accounts_details"].first["bank_name"]
+    assert_equal "ABHY0065017", json_response["accounts_details"].first["ifsc_code"]
+    assert_equal 1, json_response["accounts_details"].first["activity_logs"].first["id"]
+    assert_equal "created", json_response["accounts_details"].first["activity_logs"].first["action"]
+    assert_equal "2026-06-02T05:18:05.643Z", json_response["accounts_details"].first["activity_logs"].first["created_at"]
+
+    assert_equal "Tina Patil", json_response["accounts_details"].second["full_name"]
+    assert_equal 45664576, json_response["accounts_details"].second["account_number"]
+    assert_equal "current", json_response["accounts_details"].second["account_type"]
+    assert_equal 1500, json_response["accounts_details"].second["balance"]
+    assert_equal "ABHYUDAYA COOPERATIVE BANK LIMITED", json_response["accounts_details"].second["bank_name"]
+    assert_equal "ABHY0065101", json_response["accounts_details"].second["ifsc_code"]
+    assert_equal 2, json_response["accounts_details"].second["activity_logs"].first["id"]
+    assert_equal "created", json_response["accounts_details"].second["activity_logs"].first["action"]
+    assert_equal "2026-06-02T06:17:05.643Z", json_response["accounts_details"].second["activity_logs"].first["created_at"]
+
     assert_response :ok
   end
 

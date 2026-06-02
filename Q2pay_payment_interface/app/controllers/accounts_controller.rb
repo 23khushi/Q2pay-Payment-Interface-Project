@@ -5,7 +5,6 @@ class AccountsController < ApplicationController
       @accounts = Account.all
     else
       @accounts = current_user.accounts
-      pp @accounts
     end
     render 'index', status: :ok
   end
