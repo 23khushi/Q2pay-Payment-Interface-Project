@@ -12,18 +12,22 @@ class AccountsController < ApplicationController
 
 
   def create
-    @user = current_user
-    if @user.present?
-      @bank = Bank.find_by(ifsc: params[:ifsc])
-      @account = @user.accounts.build(acc_type: account_params[:acc_type], balance: account_params[:balance], bank_id: @bank.id )
-      if @account.save 
-        ActivityLog.create_log(current_user, "created", @account)
-        render json: {message: "Account created for existing user"}, status: :ok
+    begin
+      @user = current_user
+      if @user.present?
+        @bank = Bank.find_by(ifsc: params[:ifsc])
+        @account = @user.accounts.build(acc_type: account_params[:acc_type], balance: account_params[:balance], bank_id: @bank.id )
+        if @account.save 
+          ActivityLog.create_log(current_user, "created", @account)
+          render json: {message: "Account created for existing user"}, status: :ok
+        else
+          render json: {errors: @account.errors.full_messages}, status: :unprocessable_entity
+        end
       else
-        render json: {errors: @account.errors.full_messages}, status: :unprocessable_entity
+        render json: {errors: "User not found!"}, status: :not_found
       end
-    else
-      render json: {errors: "User not found!"}, status: :not_found
+    rescue => e 
+      render json:{errors: e.message}
     end
   end
 

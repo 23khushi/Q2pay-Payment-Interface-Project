@@ -1,5 +1,4 @@
-class User < ApplicationRecord
-    
+class User < ApplicationRecord  
     has_many :accounts
     has_many :payments, foreign_key: 'source_user_id'
   
@@ -24,8 +23,6 @@ class User < ApplicationRecord
     user: "user",
     super_admin: "super_admin",
     admin: "admin"
-     }, default: "user", validate: true
-
-
+    }, default: "user", validate: true
      
 end

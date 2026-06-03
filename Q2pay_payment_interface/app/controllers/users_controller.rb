@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 before_action :set_params, only: [:show, :update]
-skip_before_action :authenticate_user, only: [:create, :login]
-skip_before_action :authorize, only: [:login, :create]
+skip_before_action :authenticate_user, :verification_process,:authorize, only: [:create, :login]
+skip_before_action :verification_process, only: [:login, :create, :verify_aadhar]
 
   def index
     if current_user.role == 'admin' || current_user.role == 'super_admin'
@@ -18,7 +18,7 @@ skip_before_action :authorize, only: [:login, :create]
     begin
       @user =  User.new(user_params)
       @bank = Bank.find_by(bank_params)
-      account = @user&.accounts.where(account_params)&.build(bank_id: @bank.id)
+      account = @user.accounts.where(account_params).build(bank_id: @bank.id)
       if @user.save
         render :create , status: :created
         UserMailer.welcome_email(@user).deliver_now
