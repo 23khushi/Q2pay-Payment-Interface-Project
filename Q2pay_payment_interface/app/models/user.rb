@@ -8,7 +8,7 @@ class User < ApplicationRecord
 
     attribute :status, :boolean, default: false
 
-    validates :aadhar_no, presence: true, uniqueness: {message: "Already registered"}, numericality: true, length: {maximum:12}
+    validates :aadhar_no, presence: true, uniqueness: {message: "Already registered"}, numericality: true, length: {minimum:12}
     
     validates :pan_no, uniqueness: {message: "Already registered"}, format: {with: /\A[A-Z]{3}[PCHFTABGJLE]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}\z/, message: ' is invalid'}
     
@@ -18,7 +18,7 @@ class User < ApplicationRecord
 
     validates :last_name, presence: true, format: {with: /\A[A-Za-z]*\z/, message: 'should only contain letters '}
 
-    validates :email_id, presence: true, uniqueness: {message: "Already registered"}, format:{with: URI::MailTo::EMAIL_REGEXP, message: "Invalid mail id!"}
+    validates :email_id, presence: true, uniqueness: {message: "Already registered"}, format:{with: URI::MailTo::EMAIL_REGEXP, message: "Invalid!"}
     
     enum :role, {
     user: "user",

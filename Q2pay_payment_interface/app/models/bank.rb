@@ -10,10 +10,6 @@ class Bank < ApplicationRecord
 
   private
 
-  def baank_name_downcase
-    self.bank_name = bank_name.downcase
-  end
-
    def valid_ifsc_code
     actual_ifsc = Bank.includes?(ifsc)
     unless actual_ifsc.present?

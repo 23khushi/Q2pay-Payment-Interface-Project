@@ -5,25 +5,28 @@ skip_before_action :authorize, only: [:login, :create]
 
   def index
     if current_user.role == 'admin' || current_user.role == 'super_admin'
-      @users = User.all
+      @users = User.all.where.not(role: "admin")
     end
     render 'index', status: :ok
   end
-
 
   def show
     render 'show', status: :ok
   end
 
   def create
-    @user =  User.new(user_params)
-    @bank = Bank.find_by(bank_params)
-    account = @user.accounts.where(account_params).build(bank_id: @bank.id)
-    if @user.save
-      render :create , status: :created
-      UserMailer.welcome_email(@user).deliver_now
-    else
-      render json: {errors: @user.errors.full_messages + account.errors.full_messages}, status: :unprocessable_entity
+    begin
+      @user =  User.new(user_params)
+      @bank = Bank.find_by(bank_params)
+      account = @user&.accounts.where(account_params)&.build(bank_id: @bank.id)
+      if @user.save
+        render :create , status: :created
+        UserMailer.welcome_email(@user).deliver_now
+      else
+        render json: {errors: @user.errors.full_messages + account.errors.full_messages + bank.errors.full_messages}, status: :unprocessable_entity
+      end
+    rescue 
+        render json: {errors: "Bank ifsc invalid"}, status: :unprocessable_entity
     end
   end
 

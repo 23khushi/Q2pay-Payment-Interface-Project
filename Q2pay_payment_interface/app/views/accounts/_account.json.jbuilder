@@ -8,7 +8,6 @@
   json.bank_name  account.bank.bank_name.upcase
   json.ifsc_code  account.bank.ifsc  
   json.activity_logs account.activity_logs do |log|
-    json.id log.id
     json.action log.action
     json.created_at log.created_at
     end 

@@ -1,6 +1,7 @@
 class AccountsController < ApplicationController
  
   def index
+    Account.update_activity_log(current_user)
     if current_user.role == 'admin' || current_user.role == 'super_admin'
       @accounts = Account.all
     else

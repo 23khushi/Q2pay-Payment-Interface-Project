@@ -4,4 +4,5 @@ json.aadhar_no user.aadhar_no
 json.pan_no user.pan_no
 json.email_id user.email_id
 json.mobile_no user.mobile_no
+json.role user.role
 

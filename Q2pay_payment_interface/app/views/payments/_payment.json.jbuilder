@@ -1,5 +1,4 @@
- 
- json.id payment.id
+  json.id payment.id
  json.source_account_number payment.source_account.acc_no
  json.amount payment.amount
  if @current_user.id == payment.receiver_account.user_id

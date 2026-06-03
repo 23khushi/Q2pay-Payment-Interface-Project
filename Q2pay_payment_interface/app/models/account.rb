@@ -44,4 +44,19 @@ class Account < ApplicationRecord
     acc_no = SecureRandom.rand(10**8)
     self.acc_no = acc_no
   end
+
+  def self.update_activity_log(current_user)
+    accounts = current_user.accounts
+    accounts.each do |acc|
+      logs = acc.activity_logs
+      if logs.blank?
+        update_log = ActivityLog.new
+        update_log.action = "created"
+        update_log.loggable = acc
+        update_log.user_id = current_user.id
+        update_log.save
+      end
+    end
+  end
+
 end
