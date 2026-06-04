@@ -15,7 +15,7 @@ skip_before_action :verification_process, only: [:login, :create, :verify_aadhar
   end
 
   def create
-    begin
+    # begin
       @user =  User.new(user_params)
       @bank = Bank.find_by(bank_params)
       account = @user.accounts.where(account_params).build(bank_id: @bank.id)
@@ -23,11 +23,11 @@ skip_before_action :verification_process, only: [:login, :create, :verify_aadhar
         render :create , status: :created
         UserMailer.welcome_email(@user).deliver_now
       else
-        render json: {errors: @user.errors.full_messages + account.errors.full_messages + bank.errors.full_messages}, status: :unprocessable_entity
+        render json: {errors: @user.errors.full_messages + account.errors.full_messages + @bank.errors.full_messages}, status: :unprocessable_entity
       end
-    rescue 
-        render json: {errors: "Bank ifsc invalid"}, status: :unprocessable_entity
-    end
+    # rescue 
+    #     render json: {errors: "Bank ifsc invalid"}, status: :unprocessable_entity
+    # end
   end
 
 

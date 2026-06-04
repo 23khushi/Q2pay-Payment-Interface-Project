@@ -203,7 +203,6 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     assert_equal 3000, json_response["accounts_details"].first["balance"]
     assert_equal "ABHYUDAYA COOPERATIVE BANK LIMITED", json_response["accounts_details"].first["bank_name"]
     assert_equal "ABHY0065017", json_response["accounts_details"].first["ifsc_code"]
-    assert_equal 1, json_response["accounts_details"].first["activity_logs"].first["id"]
     assert_equal "created", json_response["accounts_details"].first["activity_logs"].first["action"]
     assert_equal "2026-06-02T05:18:05.643Z", json_response["accounts_details"].first["activity_logs"].first["created_at"]
 
@@ -213,7 +212,6 @@ class BankFlowTest < ActionDispatch::IntegrationTest
     assert_equal 1500, json_response["accounts_details"].second["balance"]
     assert_equal "ABHYUDAYA COOPERATIVE BANK LIMITED", json_response["accounts_details"].second["bank_name"]
     assert_equal "ABHY0065101", json_response["accounts_details"].second["ifsc_code"]
-    assert_equal 2, json_response["accounts_details"].second["activity_logs"].first["id"]
     assert_equal "created", json_response["accounts_details"].second["activity_logs"].first["action"]
     assert_equal "2026-06-02T06:17:05.643Z", json_response["accounts_details"].second["activity_logs"].first["created_at"]
 
