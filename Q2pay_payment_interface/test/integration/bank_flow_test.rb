@@ -5,7 +5,7 @@ class BankFlowTest < ActionDispatch::IntegrationTest
   test 'should create user' do
     post '/users.json',
     params: user_details,
-    headers: { }  
+    headers: {}  
     assert_equal "Riya pawar", json_response["full_name"]
     assert_equal "ABHYUDAYA COOPERATIVE BANK LIMITED", json_response["bank_name"]
     assert_equal "MOBILE BANK", json_response["branch_name"]
