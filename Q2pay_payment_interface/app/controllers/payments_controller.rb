@@ -1,5 +1,4 @@
 class PaymentsController < ApplicationController
-
   def index
     if current_user.role == 'admin' || current_user.role == 'super_admin'
       @payments = Payment.all
@@ -9,11 +8,10 @@ class PaymentsController < ApplicationController
     render :index, status: :ok
   end
 
-  
   def create
     @account = current_user.accounts
     begin
-      if @account    
+      if @account
         if Payment.transfer(payment_params,current_user)
           render json: {message: "Transaction successful"} , status: :ok
         else
@@ -28,8 +26,6 @@ class PaymentsController < ApplicationController
       render json: {errors: e.message}, status: :unprocessable_entity
     end
   end
-
-  
 
 
   private

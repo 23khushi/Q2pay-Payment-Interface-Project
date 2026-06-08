@@ -7,5 +7,5 @@ class UserLogin
     else
       { success: false, message: "Invalid credentials" }
     end
-  end  
+  end
 end

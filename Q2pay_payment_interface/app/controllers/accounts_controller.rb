@@ -1,13 +1,13 @@
 class AccountsController < ApplicationController
- 
+
   def index
     Account.update_activity_log(current_user)
-    if current_user.role == 'admin' || current_user.role == 'super_admin'
+    if current_user.role == "admin" || current_user.role == "super_admin"
       @accounts = Account.all
     else
       @accounts = current_user.accounts
     end
-    render 'index', status: :ok
+    render "index", status: :ok
   end
 
 
@@ -16,23 +16,23 @@ class AccountsController < ApplicationController
       @user = current_user
       if @user.present?
         @bank = Bank.find_by(ifsc: params[:ifsc])
-        @account = @user.accounts.build(acc_type: account_params[:acc_type], balance: account_params[:balance], bank_id: @bank.id )
-        if @account.save 
+        @account = @user.accounts.build(acc_type: account_params[:acc_type], balance: account_params[:balance], bank_id: @bank.id)
+        if @account.save
           ActivityLog.create_log(current_user, "created", @account)
-          render json: {message: "Account created for existing user"}, status: :ok
+          render json: { message: "Account created for existing user" }, status: :ok
         else
-          render json: {errors: @account.errors.full_messages}, status: :unprocessable_entity
+          render json: { errors: @account.errors.full_messages }, status: :unprocessable_entity
         end
       else
-        render json: {errors: "User not found!"}, status: :not_found
+        render json: { errors: "User not found!" }, status: :not_found
       end
-    rescue => e 
-      render json:{errors: e.message}
+    rescue => e
+      render json: { errors: e.message }
     end
   end
 
   def destroy
-    if current_user.role == 'admin' || current_user.role == 'super_admin'
+    if current_user.role == "admin" || current_user.role == "super_admin"
       @account = Account.find_by(id: params[:id])
     else
       @account = current_user.accounts.find_by(id: params[:id])
@@ -40,9 +40,9 @@ class AccountsController < ApplicationController
     if @account
       @account.softdelete
       ActivityLog.create_log(current_user, "deleted", @account)
-      render json: {message: "Account deleted for id #{params[:id]}"}, status: :ok
+      render json: { message: "Account deleted for id #{params[:id]}" }, status: :ok
     else
-      render json: {errors: 'Account doesnt exists'}, status: :unprocessable_entity
+      render json: { errors: "Account doesnt exists" }, status: :unprocessable_entity
     end
   end
 

@@ -36,7 +36,7 @@ class AadharVerificationLookup
     acc_type: "saving",
     balance: "1500",
     ifsc: "ALLA0210140"
-    }, 
+    },
     "967856703488" => {
     pan_no: "BROPS3423W",
     mobile_no: 8900412120,
@@ -71,7 +71,7 @@ class AadharVerificationLookup
       password_confirmation: "tina123",
       acc_type: "saving",
       balance: 3000,
-      ifsc: "ABHY0065017" 
+      ifsc: "ABHY0065017"
     },
     "286321066229" => {
       pan_no: "LWHPS8435D",
@@ -83,11 +83,11 @@ class AadharVerificationLookup
       password_confirmation: "khush123",
       acc_type: "saving",
       balance: 5000,
-      ifsc: "BARB0INDMAK" 
+      ifsc: "BARB0INDMAK"
     },
     "286321066339" => {
       pan_no: "LWHPS8425S",
-      mobile_no: 7498665675,
+      mobile_no: 7498665666,
       first_name: "Yogita",
       last_name: "patel",
       email_id: "yogeshsutar@q2pay.in",
@@ -95,7 +95,7 @@ class AadharVerificationLookup
       password_confirmation: "yog@123",
       acc_type: "saving",
       balance: 500,
-      ifsc: "BARB0INDMAK" 
+      ifsc: "BARB0INDMAK"
     },
     "565321066339" => {
       pan_no: "HTIPS8425S",
@@ -107,11 +107,10 @@ class AadharVerificationLookup
       password_confirmation: "anch@123",
       acc_type: "saving",
       balance: 1200,
-      ifsc: "BARB0INDMAK" 
+      ifsc: "BARB0INDMAK"
     }
   }
     def self.find_aadhar(aadhar_no)
-      return DATA[aadhar_no]
+      DATA[aadhar_no]
     end
- 
 end

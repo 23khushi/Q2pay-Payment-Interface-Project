@@ -3,20 +3,19 @@ class Account < ApplicationRecord
   belongs_to :bank
   has_many :payments
   has_many :activity_logs, as: :loggable
-  default_scope -> {where(deleted_at: nil)}
-  require 'securerandom'
-  
+  default_scope -> { where(deleted_at: nil) }
+  require "securerandom"
   before_validation :acctype_to_downcase
 
   before_validation :balance_accordingto_acctype
 
   before_create :generate_account_number
 
-  VALID_ACCOUNT_TYPE = ['saving', 'current']
+  VALID_ACCOUNT_TYPE = [ "saving", "current" ]
 
-  validates :acc_type, presence: true, inclusion:{in: VALID_ACCOUNT_TYPE, message: 'is invalid'}, uniqueness: {scope: [:user_id, :bank_id], message:  'with this user already exists '}
+  validates :acc_type, presence: true, inclusion: { in: VALID_ACCOUNT_TYPE, message: "is invalid" }, uniqueness: { scope: [ :user_id, :bank_id ], message:  "with this user already exists " }
 
-  validates :balance, presence: true, numericality: { in: 1..99999999}
+  validates :balance, presence: true, numericality: { in: 1..99999999 }
 
 
 
@@ -31,12 +30,12 @@ class Account < ApplicationRecord
   end
 
   def balance_accordingto_acctype
-    if acc_type == 'saving' && balance < 100
-      errors.add(:balance, 'must be greater than 100 for saving account')
-    elsif acc_type == 'current' && balance < 500
-      errors.add(:balance, 'must be greater than 500 for current account')
+    if VALID_ACCOUNT_TYPE.include?(acc_type) && balance < 100
+      errors.add(:balance, "must be greater than 100 for saving account")
+    elsif VALID_ACCOUNT_TYPE.include?(acc_type) && balance < 500
+      errors.add(:balance, "must be greater than 500 for current account")
     else
-      return
+      nil
     end
   end
 
@@ -58,5 +57,4 @@ class Account < ApplicationRecord
       end
     end
   end
-
 end

@@ -3,13 +3,13 @@ class AuthorizeUser
   RULES = {
     "super_admin"=> :all, 
     "admin"=> {
-      "users"=> [:index, :update, :show], 
-      "payments"=> [:index], 
+      "users"=> [:index, :update, :show],
+      "payments"=> [:index],
       "accounts"=> :all
-    }, 
+    },
     "user"=>{
       "users"=> [:update, :show, :create, :verify_aadhar],
-      "payments"=> [:create, :index], 
+      "payments"=> [:create, :index],
       "accounts"=> :all
     }
   }
@@ -31,6 +31,5 @@ class AuthorizeUser
     return false unless @controller_rules
 
     @controller_rules == :all || @controller_rules.include?(@action_name)
-
   end
 end

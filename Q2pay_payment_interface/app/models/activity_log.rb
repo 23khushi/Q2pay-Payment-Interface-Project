@@ -9,6 +9,5 @@ def self.create_log(current_user, action, loggable)
     action: action,
     loggable: loggable
   )
-
 end
 end
